@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment fragment = null;
-            switch (item.getItemId()) { 
+            switch (item.getItemId()) {
                 case R.id.navigation_discover:
                     fragment = new DiscoverFragment();
                     break;
