@@ -12,6 +12,7 @@ import java.net.URL;
 public  class NetworkUtil {
     final static String LISTEN_NOTE_BASE_URL = "https://listennotes.p.mashape.com/api/v1";
     final static String BEST_PODCAST = "best_podcasts";
+    final static String PODCAST = "podcasts";
     final static String X_MASHAPE_KEY = "X-Mashape-Key";
     final static String X_MASHAPE_VALUE = "GlySrzrNSTmshoG80vE2H6EER9W2p1wJHyKjsnXb2DqDJ3EPkt";
     final static String ACCEPT_KEY = "Accept";
@@ -29,7 +30,16 @@ public  class NetworkUtil {
         return builtURI.toString();
     }
 
-    static  String getBestPodcast(String queryString){
+    public static String builtPodcastDetailUrl(String podcastId){
+        Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
+                .appendPath(PODCAST)
+                .appendPath(podcastId)
+                .build();
+
+        return builtURI.toString();
+    }
+
+    static  String getPodcast(String queryString){
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String podcastJSONString = null;

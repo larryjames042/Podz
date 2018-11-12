@@ -5,5 +5,7 @@
 
     <dimen name="app_bar_layout_height">250dp</dimen>
     <dimen name="searchview_corner_radius">4dp</dimen>
+    <dimen name="podcast_item_elevation">4dp</dimen>
+    <dimen name="recyclerview_item_offset">8dp</dimen>
 
 </resources>

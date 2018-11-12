@@ -11,9 +11,15 @@ public class FetchBestPodcast extends AsyncTask<String, Void, String> {
    }
 
     @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        mListener.onPre();
+    }
+
+    @Override
     protected String doInBackground(String... urls) {
 
-        return NetworkUtil.getBestPodcast(urls[0]);
+        return NetworkUtil.getPodcast(urls[0]);
     }
 
     @Override
@@ -27,5 +33,7 @@ public class FetchBestPodcast extends AsyncTask<String, Void, String> {
 
     public interface AsynctaskListener{
         void onPost(String result);
+        void onPre();
+
     }
 }

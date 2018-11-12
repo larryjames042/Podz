@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <android.support.v7.widget.CardView
+        android:id="@+id/podcast_list_item_container"
+        app:cardElevation="@dimen/podcast_item_elevation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <android.support.constraint.ConstraintLayout
@@ -11,8 +13,10 @@
 
             <ImageView
                 android:id="@+id/podcast_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +25,7 @@
                 tools:src="@mipmap/ic_launcher_round" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/podcast_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -34,20 +38,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="@+id/textView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintStart_toStartOf="@+id/podcast_name"
+                app:layout_constraintTop_toBottomOf="@+id/podcast_name"
                 tools:text="by Author" />
 
             <TextView
                 android:id="@+id/podcast_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="3"
-                android:ellipsize="end"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:ellipsize="end"
+                android:maxLines="3"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -62,7 +66,7 @@
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@string/play_button"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView2" />
+                app:layout_constraintTop_toTopOf="@+id/podcast_name" />
 
             <ImageButton
                 android:id="@+id/bt_fav"

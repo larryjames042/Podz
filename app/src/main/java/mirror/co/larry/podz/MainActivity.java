@@ -6,12 +6,16 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
+import mirror.co.larry.podz.adapter.PodcastAdapter;
 import mirror.co.larry.podz.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity implements PodcastAdapter.OnPodcastClickListener {
+    private static final String BACK_STACK_ROOT_TAG = "root_fragment";
     ActivityMainBinding binding;
 
     @Override
@@ -54,6 +58,19 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void podcastItemClickListener(View view, String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
+        Fragment podcastDetailFragment = new PodcastDetailFragment();
+        podcastDetailFragment.setArguments(bundle);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
+                .addToBackStack(PodcastDetailFragment.TAG)
+                .commit();
     }
 
 }

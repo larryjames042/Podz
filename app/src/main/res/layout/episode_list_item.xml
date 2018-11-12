@@ -21,7 +21,7 @@
                 tools:src="@mipmap/ic_launcher_round" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/podcast_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -34,8 +34,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="@+id/textView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintStart_toStartOf="@+id/podcast_name"
+                app:layout_constraintTop_toBottomOf="@+id/podcast_name"
                 tools:text="by Author" />
 
             <TextView
@@ -62,7 +62,7 @@
                 android:layout_marginEnd="8dp"
                 android:contentDescription="@string/play_button"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView2" />
+                app:layout_constraintTop_toTopOf="@+id/podcast_name" />
 
             <ImageButton
                 android:id="@+id/bt_fav"
