@@ -2,7 +2,6 @@ package mirror.co.larry.podz;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        setSupportActionBar(binding.appBar.toolbar);
         // default Fragment
         loadFragment(new DiscoverFragment());
        binding.bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -37,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new DiscoverFragment();
                     break;
                 case R.id.navigation_Subscription:
-                    fragment = new SearchFragment();
+                    fragment = new FavFragment();
                     break;
                 case R.id.navigation_Search:
-                    fragment = new FavFragment();
+                    fragment = new SearchFragment();
                     break;
             }
             return loadFragment(fragment);

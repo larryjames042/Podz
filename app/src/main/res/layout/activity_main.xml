@@ -10,13 +10,6 @@
         android:fitsSystemWindows="true"
         tools:context=".MainActivity">
 
-        <include
-            android:id="@+id/app_bar"
-            layout="@layout/toolbar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <FrameLayout
             android:id="@+id/content_container"
             android:layout_width="match_parent"
@@ -24,7 +17,9 @@
             app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/app_bar" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+
 
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/bottom_navigation"
