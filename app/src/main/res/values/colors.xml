@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/teal_700</color>
-    <color name="colorPrimaryDark">@color/teal_900</color>
+    <color name="colorPrimary">@color/brown_700</color>
+    <color name="colorPrimaryDark">@color/brown_900</color>
     <color name="colorAccent">@color/light_green_a200</color>
 
 
@@ -9,6 +9,11 @@
     <color name="teal_700">#00796b</color>
     <color name="teal_900">#004d40</color>
     <color name="light_green_a200">#b2ff59</color>
+
+    <color name="brown_300">#A1887F</color>
+    <color name="brown_500">#795548</color>
+    <color name="brown_700">#5D4037</color>
+    <color name="brown_900">#3E2723</color>
 
     <color name="transparent">#00fcfcfc</color>
     <color name="white">#ffffff</color>

@@ -14,7 +14,7 @@ import android.widget.Toast;
 import mirror.co.larry.podz.adapter.PodcastAdapter;
 import mirror.co.larry.podz.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity implements PodcastAdapter.OnPodcastClickListener {
+public class MainActivity extends AppCompatActivity {
     private static final String BACK_STACK_ROOT_TAG = "root_fragment";
     ActivityMainBinding binding;
 
@@ -60,17 +60,17 @@ public class MainActivity extends AppCompatActivity implements PodcastAdapter.On
         return false;
     }
 
-    @Override
-    public void podcastItemClickListener(View view, String id) {
-        Bundle bundle = new Bundle();
-        bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
-        Fragment podcastDetailFragment = new PodcastDetailFragment();
-        podcastDetailFragment.setArguments(bundle);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
-                .addToBackStack(PodcastDetailFragment.TAG)
-                .commit();
-    }
+//    @Override
+//    public void podcastItemClickListener(View view, String id) {
+//        Bundle bundle = new Bundle();
+//        bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
+//        Fragment podcastDetailFragment = new PodcastDetailFragment();
+//        podcastDetailFragment.setArguments(bundle);
+//        getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
+//                .addToBackStack(PodcastDetailFragment.TAG)
+//                .commit();
+//    }
 
 }
