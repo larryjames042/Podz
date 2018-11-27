@@ -2,6 +2,7 @@ package mirror.co.larry.podz.adapter;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import mirror.co.larry.podz.EpisodeDetailFragment;
 import mirror.co.larry.podz.Model.Episode;
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.databinding.PreviousEpisodeListItemBinding;
@@ -20,9 +22,11 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
     List<Episode> episodeList;
     Context mContext;
     LayoutInflater layoutInflater;
-    public EpisodeAdapter(Context context, List<Episode> list){
+    OnEpisodeClickListener mListener;
+    public EpisodeAdapter(Context context, List<Episode> list, OnEpisodeClickListener listener){
         mContext = context;
         episodeList = list;
+        mListener = listener;
     }
 
     @NonNull
@@ -62,6 +66,27 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
             String formattedDate = sdf.format(date);
             binding.episodeName.setText(episode.getTitle());
             binding.publishDate.setText(formattedDate);
+            final Bundle b = new Bundle();
+            b.putString(EpisodeDetailFragment.KEY_PODCAST_NAME, episode.getPodcastName());
+            b.putString(EpisodeDetailFragment.KEY_AUDIO, episode.getAudio());
+            b.putString( EpisodeDetailFragment.KEY_DESCRIPTION , episode.getDescription());
+            b.putString( EpisodeDetailFragment.KEY_ID  , episode.getId());
+            b.putString( EpisodeDetailFragment.KEY_LISTEN_NOTE_URL , episode.getListenNoteUrl());
+            b.putString( EpisodeDetailFragment.KEY_THUMBNAIL , episode.getThumbnail());
+            b.putString(EpisodeDetailFragment.KEY_TITLE  , episode.getTitle());
+            b.putInt( EpisodeDetailFragment.KEY_AUDIO_LENGTH , episode.getAudioLength());
+            b.putString( EpisodeDetailFragment.KEY_PUB_DATE, formattedDate);
+
+            binding.episodeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.episodeOnClick(v, b);
+                }
+            });
         }
+    }
+
+    public interface OnEpisodeClickListener {
+        void episodeOnClick(View view, Bundle bundle);
     }
 }

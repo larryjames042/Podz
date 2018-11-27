@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/bt_play"
+                app:layout_constraintEnd_toStartOf="@+id/bt_share"
                 app:layout_constraintStart_toEndOf="@+id/podcast_image"
                 app:layout_constraintTop_toTopOf="@+id/podcast_image"
                 tools:text="Podcast Name" />

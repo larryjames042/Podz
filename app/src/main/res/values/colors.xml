@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/brown_700</color>
-    <color name="colorPrimaryDark">@color/brown_900</color>
+    <color name="colorPrimary">@color/blueGrey_800</color>
+    <color name="colorPrimaryDark">@color/blueGrey_900</color>
     <color name="colorAccent">@color/light_green_a200</color>
 
 
@@ -14,6 +14,12 @@
     <color name="brown_500">#795548</color>
     <color name="brown_700">#5D4037</color>
     <color name="brown_900">#3E2723</color>
+
+    <color name="blueGrey_900">#263238</color>
+    <color name="blueGrey_800">#37474F</color>
+    <color name="blueGrey_700">#455A64</color>
+    <color name="blueGrey_500">#607D8B</color>
+    <color name="blueGrey_300">#90A4AE</color>
 
     <color name="transparent">#00fcfcfc</color>
     <color name="white">#ffffff</color>

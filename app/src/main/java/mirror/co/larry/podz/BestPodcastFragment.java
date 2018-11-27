@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,6 @@ public class BestPodcastFragment extends Fragment implements PodcastAdapter.OnPo
     List<Podcast>  podcastList;
     PodcastAdapter podcastAdapter;
     FragmentBestPodcastBinding binding;
-//    PodcastAdapter.OnPodcastClickListener mListener;
 
     public BestPodcastFragment() {
         // Required empty public constructor
@@ -71,7 +71,7 @@ public class BestPodcastFragment extends Fragment implements PodcastAdapter.OnPo
                             String id = podcast.getString("id");
                             String title = podcast.getString("title");
                             String thumbnail = podcast.getString("thumbnail");
-                            String description = podcast.getString("description");
+                            String description = android.text.Html.fromHtml(podcast.getString("description")).toString();
                             String publisher = podcast.getString("publisher");
                             podcastList.add(new Podcast(id,title,description,publisher,thumbnail));
                         }
@@ -102,19 +102,12 @@ public class BestPodcastFragment extends Fragment implements PodcastAdapter.OnPo
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_best_podcast, container, false);
         View view = binding.getRoot();
 
-
-
         return view;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        try {
-//            mListener = (PodcastAdapter.OnPodcastClickListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(context.toString() + e.getMessage());
-//        }
     }
 
     @Override

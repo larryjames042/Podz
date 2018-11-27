@@ -9,8 +9,9 @@ public class Episode {
     private String listenNoteUrl;
     private long pubDate;
     private int audioLength;
+    private String podcastName;
 
-    public Episode(String audio, String id, String title, String thumbnail, String description, String listenNoteUrl, long pubDate, int audioLength) {
+    public Episode(String audio, String id, String title, String thumbnail, String description, String listenNoteUrl, long pubDate, int audioLength, String podcastName) {
         this.audio = audio;
         this.id = id;
         this.title = title;
@@ -19,6 +20,7 @@ public class Episode {
         this.listenNoteUrl = listenNoteUrl;
         this.pubDate = pubDate;
         this.audioLength = audioLength;
+        this.podcastName = podcastName;
     }
 
     public String getAudio() {
@@ -83,5 +85,13 @@ public class Episode {
 
     public void setAudioLength(int audioLength) {
         this.audioLength = audioLength;
+    }
+
+    public String getPodcastName() {
+        return podcastName;
+    }
+
+    public void setPodcastName(String podcastName) {
+        this.podcastName = podcastName;
     }
 }

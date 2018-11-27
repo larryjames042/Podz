@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        tools:text="Education"
+        android:id="@+id/tv_genre"
+        android:padding="@dimen/genre_text_padding"
+        android:textSize="@dimen/genre_text_size"
+        android:background="@drawable/genre_text_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </TextView>
+</layout>

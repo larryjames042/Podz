@@ -22,7 +22,7 @@
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/bt_share"
-                tools:text="@string/subscription" />
+                android:text="@string/subscription" />
 
             <Button
                 android:id="@+id/bt_share"
@@ -34,7 +34,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/bt_subscribe"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="@string/share" />
+                android:text="@string/share" />
 
             <Button
                 android:id="@+id/bt_favourite"
@@ -45,27 +45,30 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/bt_share"
                 app:layout_constraintTop_toTopOf="@+id/bt_share"
-                tools:text="@string/favourite" />
+                android:text="@string/favourite" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:background="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bt_share">
 
                 <TextView
                     android:id="@+id/label_abt_podcast"
+                    style="@style/header_text_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="@string/test_title" />
+                    tools:text="@string/about_podcast" />
 
                 <TextView
                     android:id="@+id/podcast_description"
@@ -77,6 +80,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/label_abt_podcast"
+                    style="@style/content_text_style"
                     tools:text="@string/test_content" />
 
                 <android.support.v7.widget.RecyclerView

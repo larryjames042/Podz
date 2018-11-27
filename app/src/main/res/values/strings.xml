@@ -32,5 +32,6 @@
     <string name="podcast_favourite_button">Add to favourite Button</string>
     <string name="loading_title">Loading</string>
     <string name="share_button">Share Podcast Button</string>
+    <string name="about_episode">About Episode</string>
 
 </resources>
