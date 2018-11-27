@@ -30,7 +30,7 @@ public class EpisodeDetailFragment extends Fragment {
     public static final String KEY_LISTEN_NOTE_URL = "listenNoteUrl";
     public static final String KEY_PODCAST_NAME = "podcastName";
 
-    String id, title, audio, description, thumbnail, listenNoteUrl, pubDate;
+    String id, title, audio, description, thumbnail, listenNoteUrl, pubDate, podcastName;
     int audioLength;
     FragmentEpisodeDetailBinding binding;
 
@@ -52,6 +52,7 @@ public class EpisodeDetailFragment extends Fragment {
             thumbnail = getArguments().getString(KEY_THUMBNAIL);
             listenNoteUrl = getArguments().getString(KEY_LISTEN_NOTE_URL);
             description = getArguments().getString(KEY_DESCRIPTION);
+            podcastName = getArguments().getString(KEY_PODCAST_NAME);
         }
     }
 
@@ -61,6 +62,7 @@ public class EpisodeDetailFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_episode_detail, container, false);
         View v = binding.getRoot();
+        binding.podcastName.setText(podcastName);
         binding.episodeDuration.setText(HelperUtil.convertSecToHr(audioLength));
         binding.episodeUploadDate.setText(String.valueOf(pubDate));
         binding.episodeName.setText(title);

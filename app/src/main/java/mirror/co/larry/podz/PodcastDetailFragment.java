@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -36,7 +37,7 @@ import mirror.co.larry.podz.databinding.FragmentPodcastDetailBinding;
  * A simple {@link Fragment} subclass.
  */
 public class PodcastDetailFragment extends Fragment implements EpisodeAdapter.OnEpisodeClickListener {
-    public static final String TAG = "BestPodcastFragment";
+    public static final String TAG = "PodcastDetailFragment";
     public static final String PODCAST_ID = "podcast_id";
     FragmentPodcastDetailBinding binding;
     List<Episode> episodeList;
@@ -183,5 +184,14 @@ public class PodcastDetailFragment extends Fragment implements EpisodeAdapter.On
                 .replace(R.id.content_container, fragment)
                 .addToBackStack(TAG)
                 .commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+//        if(item.getItemId() == android.R.id.home){
+//            getActivity().getSupportFragmentManager().popBackStack();
+//        }
+        return super.onOptionsItemSelected(item);
     }
 }

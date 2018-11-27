@@ -41,17 +41,40 @@ public class BestPodcastFragment extends Fragment implements PodcastAdapter.OnPo
     List<Podcast>  podcastList;
     PodcastAdapter podcastAdapter;
     FragmentBestPodcastBinding binding;
+    ProgressDialog progressDialog;
 
     public BestPodcastFragment() {
         // Required empty public constructor
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("lifecycle : ", "Best onResume");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("lifecycle : ", "Best onStop");
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setTitle(getActivity().getString(R.string.loading_title));
+        Log.d("lifecycle : ", "Best onCreate");
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        // Inflate the layout for this fragment
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_best_podcast, container, false);
+        View view = binding.getRoot();
+        progressDialog = new ProgressDialog(getActivity());
         podcastList = new ArrayList<>();
+        progressDialog.setTitle(getActivity().getString(R.string.loading_title));
         FetchBestPodcast asyncTask = new FetchBestPodcast(new FetchBestPodcast.AsynctaskListener() {
 
             @Override
@@ -90,18 +113,7 @@ public class BestPodcastFragment extends Fragment implements PodcastAdapter.OnPo
                 }
             }
         });
-
         asyncTask.execute(NetworkUtil.builtBestPodcastUrl());
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_best_podcast, container, false);
-        View view = binding.getRoot();
-
         return view;
     }
 
@@ -118,9 +130,8 @@ public class BestPodcastFragment extends Fragment implements PodcastAdapter.OnPo
         podcastDetailFragment.setArguments(bundle);
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
-                .addToBackStack(PodcastDetailFragment.TAG)
+                .replace(R.id.content_container, podcastDetailFragment)
+                .addToBackStack(TAG)
                 .commit();
-        Toast.makeText(getActivity(), id, Toast.LENGTH_SHORT).show();
     }
 }

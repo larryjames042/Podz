@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <ScrollView
+        android:background="@color/transparent"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.constraint.ConstraintLayout
@@ -35,27 +36,28 @@
 
                     <TextView
                         android:id="@+id/podcast_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
                         android:layout_marginEnd="8dp"
                         android:maxLines="1"
                         android:textColor="@color/blueGrey_700"
                         android:textSize="12sp"
                         app:layout_constraintEnd_toStartOf="@+id/episode_thumbnail"
-                        app:layout_constraintHorizontal_bias="0.047"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/episode_thumbnail"
                         tools:text="@string/test_podcast_name" />
 
                     <TextView
                         android:id="@+id/episode_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:textSize="18sp"
+                        android:layout_marginEnd="8dp"
                         android:textColor="@color/blueGrey_800"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toStartOf="@+id/episode_thumbnail"
                         app:layout_constraintStart_toStartOf="@+id/podcast_name"
                         app:layout_constraintTop_toBottomOf="@+id/podcast_name"
                         tools:text="@string/test_episode_name" />
@@ -64,7 +66,7 @@
                         android:id="@+id/episode_upload_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:textSize="12sp"
                         app:layout_constraintStart_toStartOf="@+id/episode_name"
                         app:layout_constraintTop_toBottomOf="@+id/episode_name"
@@ -80,7 +82,7 @@
                         android:src="@drawable/ic_play"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/episode_upload_date"
-                        app:layout_constraintTop_toBottomOf="@+id/episode_thumbnail" />
+                        app:layout_constraintTop_toBottomOf="@+id/episode_upload_date" />
 
                     <TextView
                         android:id="@+id/episode_duration"
@@ -90,7 +92,7 @@
                         app:layout_constraintBottom_toBottomOf="@+id/bt_play"
                         app:layout_constraintStart_toEndOf="@+id/bt_play"
                         app:layout_constraintTop_toTopOf="@+id/bt_play"
-                        android:text="@string/test_duration" />
+                        tools:text="@string/test_duration" />
 
                     <ImageButton
                         android:id="@+id/bt_share"

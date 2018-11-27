@@ -42,82 +42,44 @@
                 android:id="@+id/player_small_view_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:background="@color/blueGrey_300"
+                android:background="@color/teal_500"
                 app:layout_constraintStart_toStartOf="parent">
-
-                <!--<TextView-->
-                    <!--android:id="@+id/tv_episode_name"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginStart="8dp"-->
-                    <!--android:layout_marginTop="4dp"-->
-                    <!--android:layout_marginEnd="8dp"-->
-                    <!--android:maxLines="1"-->
-                    <!--app:layout_constraintEnd_toStartOf="@+id/bt_play"-->
-                    <!--app:layout_constraintHorizontal_bias="0.03"-->
-                    <!--app:layout_constraintStart_toStartOf="parent"-->
-                    <!--app:layout_constraintTop_toTopOf="parent"-->
-                    <!--tools:text="Episode Name" />-->
-
-                <TextView
-                    android:id="@+id/tv_duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    app:layout_constraintStart_toEndOf="@+id/tv_current_pos"
-                    app:layout_constraintTop_toTopOf="@+id/tv_current_pos"
-                    tools:text="/01:34:34" />
-
-                <TextView
-                    android:id="@+id/tv_current_pos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/tv_episode_name"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_episode_name"
-                    tools:text="23:00" />
-
-                <ImageButton
-                    android:id="@+id/bt_play"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@color/transparent"
-                    android:src="@drawable/ic_play"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </android.support.constraint.ConstraintLayout>
-
-            <com.google.android.exoplayer2.ui.PlayerControlView
-                android:id="@+id/player_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:show_timeout="0"
-                app:controller_layout_id="@layout/exo_control_view"
-                app:layout_constraintBottom_toTopOf="@+id/player_small_view_container"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" >
 
                 <TextView
                     android:id="@+id/tv_episode_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:focusable="true"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:focusableInTouchMode="true"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="8dp"
-                    android:maxLines="1"
+                    app:layout_constraintEnd_toStartOf="@+id/player_view"
+                    app:layout_constraintHorizontal_bias="0.03"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="Episode Name" />
 
-            </com.google.android.exoplayer2.ui.PlayerControlView>
+                <com.google.android.exoplayer2.ui.PlayerControlView
+                    android:id="@+id/player_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:controller_layout_id="@layout/exo_control_view"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:show_timeout="0" />
+            </android.support.constraint.ConstraintLayout>
+
+
+
         </android.support.constraint.ConstraintLayout>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

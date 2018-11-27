@@ -1,9 +1,14 @@
 package mirror.co.larry.podz.services;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 
 import com.google.android.exoplayer2.ExoPlayer;
@@ -17,10 +22,12 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import mirror.co.larry.podz.MainActivity;
 import mirror.co.larry.podz.R;
 
 public class MusicService extends Service implements Player.EventListener {
-
+    private static final String CHANNEL_ID = "channel_id";
+    private static final int NOTIFY_ID = 1;
     private SimpleExoPlayer exoPlayer;
     private  final IBinder musicBind = new MusicBinder();
     private boolean isPlaying = false;
@@ -44,6 +51,7 @@ public class MusicService extends Service implements Player.EventListener {
         }
         return false;
     }
+
 
     @Override
     public void onDestroy() {
@@ -81,9 +89,10 @@ public class MusicService extends Service implements Player.EventListener {
         exoPlayer.prepare(videoSource);
     }
 
-    public void playPodcast(String audioUri){
+    public void playPodcast(String audioUri, String episodeName){
         initializePlayer(audioUri);
         exoPlayer.setPlayWhenReady(true);
+        buildNotification(episodeName);
     }
 
     public boolean isPlaying(){
@@ -94,6 +103,48 @@ public class MusicService extends Service implements Player.EventListener {
         if(exoPlayer!=null){
             exoPlayer.setPlayWhenReady(false);
         }
+    }
+
+    private void buildNotification(String episodeName){
+        Intent notIntent = new Intent(this, MainActivity.class);
+        notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendInt = PendingIntent.getActivity(this, 0,
+                notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification.Builder builder;
+
+        NotificationManager mNotificationManager = (NotificationManager)getSystemService(MusicService.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            mNotificationManager.createNotificationChannel(channel);
+            builder = new Notification.Builder(this, CHANNEL_ID);
+        }else{
+            builder = new Notification.Builder(this);
+        }
+        builder.setContentIntent(pendInt)
+                .setSmallIcon(R.drawable.ic_play)
+                .setTicker(episodeName)
+                .setOngoing(true)
+                .setContentTitle(getString(R.string.playing))
+                .setContentText(episodeName);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            builder.setColor(getColor(R.color.colorPrimary));
+        } else {
+            builder.setColor(getResources().getColor(R.color.colorPrimary));
+        }
+
+
+        Notification not = builder.build();
+
+        startForeground(NOTIFY_ID, not);
     }
 
     @Override

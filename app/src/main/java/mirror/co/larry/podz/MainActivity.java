@@ -12,10 +12,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
 
 import mirror.co.larry.podz.adapter.PodcastAdapter;
 import mirror.co.larry.podz.databinding.ActivityMainBinding;
@@ -27,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
     private MusicService musicService;
     private  boolean musicBound = false;
     private Intent playIntent;
+    private SimpleExoPlayer exoPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +83,8 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
             musicService = binder.getService();
             // pass list
             musicBound = true;
-
-            binding.playerView.setPlayer(binder.getExoplayerInstance());
+            exoPlayer = binder.getExoplayerInstance();
+            binding.playerView.setPlayer(exoPlayer);
 
         }
 
@@ -93,14 +98,8 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
     protected void onStart() {
         super.onStart();
         if(playIntent == null){
-
             playIntent = new Intent(this, MusicService.class);
             bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(playIntent);
-            } else {
-                startService(playIntent);
-            }
         }
     }
 
@@ -115,11 +114,11 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
     public void onPlayButtonClick(String audioUrl, String audioDuration, String episodeName) {
         binding.playerSmallViewContainer.setVisibility(View.VISIBLE);
         binding.tvEpisodeName.setText(episodeName);
-        binding.tvDuration.setText(audioDuration);
+        binding.tvEpisodeName.setSelected(true);
         if(musicService.isPlaying()){
             musicService.pausePlayer();
         }else{
-            musicService.playPodcast(audioUrl);
+            musicService.playPodcast(audioUrl, episodeName);
         }
     }
 }
