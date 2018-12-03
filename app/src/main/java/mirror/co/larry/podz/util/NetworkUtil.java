@@ -16,17 +16,20 @@ public  class NetworkUtil {
     final static String TYPE_KEY = "type";
     final static String PODCAST = "podcasts";
     final static String SEARCH = "search";
+    final static String GENRE_ID = "genre_id";
     final static String X_MASHAPE_KEY = "X-Mashape-Key";
     final static String X_MASHAPE_VALUE = "GlySrzrNSTmshoG80vE2H6EER9W2p1wJHyKjsnXb2DqDJ3EPkt";
     final static String ACCEPT_KEY = "Accept";
     final static String ACCEPT_VALUE = "application/json";
+    final static String SELF_HELP = "90";
+    final static String NEWS_POLITIC = "99";
 
 
 
     private static  final String LOG_TAG = NetworkUtil.class.getSimpleName();
 
 
-    public static  String builtBestPodcastUrl(){
+    public static  String buildBestPodcastUrl(){
         Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
                 .appendPath(BEST_PODCAST)
                 .build();
@@ -34,7 +37,25 @@ public  class NetworkUtil {
         return builtURI.toString();
     }
 
-    public static String builtPodcastDetailUrl(String podcastId){
+    public static  String buildSelfHelpPodcastUrl(){
+        Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
+                .appendPath(BEST_PODCAST)
+                .appendQueryParameter(GENRE_ID, SELF_HELP)
+                .build();
+
+        return builtURI.toString();
+    }
+
+    public static  String buildNewsAndPoliticPodcastUrl(){
+        Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
+                .appendPath(BEST_PODCAST)
+                .appendQueryParameter(GENRE_ID, NEWS_POLITIC)
+                .build();
+
+        return builtURI.toString();
+    }
+
+    public static String buildPodcastDetailUrl(String podcastId){
         Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
                 .appendPath(PODCAST)
                 .appendPath(podcastId)
@@ -43,7 +64,7 @@ public  class NetworkUtil {
         return builtURI.toString();
     }
 
-    public static String builtPodcastQueryUrl(String queryText){
+    public static String buildPodcastQueryUrl(String queryText){
         Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
                 .appendPath(SEARCH)
                 .appendQueryParameter(QUERY_KEY, queryText)
@@ -53,6 +74,8 @@ public  class NetworkUtil {
         return builtURI.toString();
     }
 
+
+    // helper method to parse JSON
     static  String getPodcast(String queryString){
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;

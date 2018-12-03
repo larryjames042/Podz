@@ -6,9 +6,12 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -55,6 +58,7 @@ public class EpisodeDetailFragment extends Fragment {
             description = getArguments().getString(KEY_DESCRIPTION);
             podcastName = getArguments().getString(KEY_PODCAST_NAME);
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -63,6 +67,11 @@ public class EpisodeDetailFragment extends Fragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_episode_detail, container, false);
         View v = binding.getRoot();
+        ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbar.toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(title);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         binding.podcastName.setText(podcastName);
         binding.episodeDuration.setText(HelperUtil.convertSecToHr(audioLength));
         binding.episodeUploadDate.setText(String.valueOf(pubDate));
@@ -81,6 +90,14 @@ public class EpisodeDetailFragment extends Fragment {
         });
 
         return v;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()== android.R.id.home){
+            getActivity().onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -32,9 +32,17 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
         // default Fragment
         loadFragment(new DiscoverFragment());
+
        binding.bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        binding.playerSmallViewContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     // Bottom Navigation Items onClick

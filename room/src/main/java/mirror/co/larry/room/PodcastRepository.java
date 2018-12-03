@@ -1,14 +1,10 @@
-package mirror.co.larry.podz.database;
+package mirror.co.larry.room;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
-import android.support.v4.content.AsyncTaskLoader;
 
 import java.util.List;
-
-import mirror.co.larry.podz.dao.PodcastDao;
-import mirror.co.larry.podz.model.Podcast;
 
 public class PodcastRepository {
     private PodcastDao mPodcastDao;
@@ -28,7 +24,11 @@ public class PodcastRepository {
         new insertAsyncTask(mPodcastDao).execute(podcast);
     }
 
-    private static class insertAsyncTask extends AsyncTask<Podcast, Void, Void>{
+    public void deletePodcast(Podcast podcast){
+        new deleteAsyncTask(mPodcastDao).execute(podcast);
+    }
+
+    private static class insertAsyncTask extends AsyncTask<Podcast, Void, Void> {
 
         private PodcastDao mAsyncTaskDao;
 
@@ -39,6 +39,21 @@ public class PodcastRepository {
         @Override
         protected Void doInBackground(Podcast... podcasts) {
             mAsyncTaskDao.insertPodcast(podcasts[0]);
+            return null;
+        }
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<Podcast, Void, Void>{
+
+        private PodcastDao mAsyncTaskDao;
+
+        public deleteAsyncTask(PodcastDao mAsyncTaskDao){
+            this.mAsyncTaskDao = mAsyncTaskDao;
+        }
+
+        @Override
+        protected Void doInBackground(Podcast... podcasts) {
+            mAsyncTaskDao.deletePodcast(podcasts[0].getId());
             return null;
         }
     }

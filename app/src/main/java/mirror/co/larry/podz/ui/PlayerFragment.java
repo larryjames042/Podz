@@ -9,14 +9,13 @@ import android.view.ViewGroup;
 
 import mirror.co.larry.podz.R;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InteviewPodcastFragment extends Fragment {
+public class PlayerFragment extends Fragment {
 
 
-    public InteviewPodcastFragment() {
+    public PlayerFragment() {
         // Required empty public constructor
     }
 
@@ -25,7 +24,7 @@ public class InteviewPodcastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_inteview_podcast, container, false);
+        return inflater.inflate(R.layout.fragment_player, container, false);
     }
 
 }

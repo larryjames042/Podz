@@ -2,15 +2,22 @@ package mirror.co.larry.podz.ui;
 
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -19,17 +26,18 @@ import mirror.co.larry.podz.adapter.FavouritePodcastAdapter;
 import mirror.co.larry.podz.databinding.FragmentFavBinding;
 import mirror.co.larry.podz.model.Podcast;
 import mirror.co.larry.podz.util.ItemOffsetDecoration;
+import mirror.co.larry.podz.util.RecyclerViewItemTouchHelper;
 import mirror.co.larry.podz.viewModel.PodcastViewModel;
-
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FavFragment extends Fragment implements FavouritePodcastAdapter.OnPodcastClickListener  {
+public class FavFragment extends Fragment implements FavouritePodcastAdapter.OnPodcastClickListener, RecyclerViewItemTouchHelper.RecyclerItemTouchHelperListener {
 
     PodcastViewModel mViewModel;
     FragmentFavBinding binding;
     FavouritePodcastAdapter adapter;
+    List<mirror.co.larry.room.Podcast> podcastList;
     public FavFragment() {
         // Required empty public constructor
     }
@@ -42,6 +50,10 @@ public class FavFragment extends Fragment implements FavouritePodcastAdapter.OnP
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_fav, container, false);
         View view = binding.getRoot();
 
+        //set up toolbar
+        ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbar.toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.favourite));
+
 //         set recyclerview decoration and layout
         ItemOffsetDecoration decoration = new ItemOffsetDecoration(getActivity(), R.dimen.recyclerview_item_offset);
         binding.rvFavPodcast.addItemDecoration(decoration);
@@ -51,17 +63,24 @@ public class FavFragment extends Fragment implements FavouritePodcastAdapter.OnP
         adapter = new FavouritePodcastAdapter(getContext(), this);
 
         mViewModel = ViewModelProviders.of(this).get(PodcastViewModel.class);
-        mViewModel.getmAllPodcast().observe(this, new Observer<List<Podcast>>() {
+
+        mViewModel.getAllPodcast().observe(this, new Observer<List<mirror.co.larry.room.Podcast>>() {
             @Override
-            public void onChanged(@Nullable List<Podcast> podcasts) {
+            public void onChanged(@Nullable List<mirror.co.larry.room.Podcast> podcasts) {
+                //get a copy of fav podcast list
+                podcastList = podcasts;
                 adapter.setPodcast(podcasts);
             }
         });
         binding.rvFavPodcast.setAdapter(adapter);
-        return inflater.inflate(R.layout.fragment_fav, container, false);
+
+
+        ItemTouchHelper.SimpleCallback callback = new RecyclerViewItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(callback).attachToRecyclerView(binding.rvFavPodcast);
+        return view;
     }
 
-//     Podcast onClick --->  PodcastDetailFragment
+    //     Podcast onClick --->  PodcastDetailFragment
 
     @Override
     public void podcastItemClickListener(View view, String id) {
@@ -74,5 +93,13 @@ public class FavFragment extends Fragment implements FavouritePodcastAdapter.OnP
                 .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    // remove from favourite list
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        mirror.co.larry.room.Podcast podcast = podcastList.get(position);
+        mViewModel.deletePodcast(podcast);
+        Snackbar.make(binding.favFragmentContainer, getString(R.string.remove_fav_msg) , Snackbar.LENGTH_SHORT).show();
     }
 }

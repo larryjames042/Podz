@@ -17,7 +17,7 @@ import mirror.co.larry.podz.databinding.PodcastListItemBinding;
 import mirror.co.larry.podz.model.Podcast;
 
 public class FavouritePodcastAdapter extends RecyclerView.Adapter<FavouritePodcastAdapter.PodcastViewHolder> {
-    List<Podcast> podcastList;
+    List<mirror.co.larry.room.Podcast> podcastList;
     Context mContext;
     LayoutInflater layoutInflater;
     OnPodcastClickListener mListener;
@@ -39,7 +39,7 @@ public class FavouritePodcastAdapter extends RecyclerView.Adapter<FavouritePodca
 
     @Override
     public void onBindViewHolder(@NonNull PodcastViewHolder podcastViewHolder, int i) {
-        Podcast podcast = podcastList.get(i);
+        mirror.co.larry.room.Podcast podcast = podcastList.get(i);
         podcastViewHolder.binding.podcastAuthor.setText(podcast.getPublisher());
         podcastViewHolder.binding.podcastDescription.setText(podcast.getDescription());
         podcastViewHolder.binding.podcastName.setText(podcast.getTitle());
@@ -56,7 +56,7 @@ public class FavouritePodcastAdapter extends RecyclerView.Adapter<FavouritePodca
         return 0;
     }
 
-    public void setPodcast(List<Podcast> list){
+    public void setPodcast(List<mirror.co.larry.room.Podcast> list){
         podcastList = list;
         notifyDataSetChanged();
     }
@@ -70,7 +70,7 @@ public class FavouritePodcastAdapter extends RecyclerView.Adapter<FavouritePodca
             this.binding = itemBinding;
         }
 
-        void setBinding(final Podcast podcast){
+        void setBinding(final mirror.co.larry.room.Podcast podcast){
             binding.podcastListItemContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

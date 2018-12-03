@@ -39,8 +39,8 @@ public class DiscoverFragment extends Fragment {
 
         // Set the text for each tab
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tab_best));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tab_hot));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tab_interview));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tab_self_help));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(R.string.tab_news_politic));
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         // Using PagerAdapter to manage page views  in fragment

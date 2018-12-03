@@ -7,28 +7,28 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-import javax.sql.PooledConnection;
-
-import mirror.co.larry.podz.database.PodcastRepository;
-import mirror.co.larry.podz.model.Podcast;
+import mirror.co.larry.room.Podcast;
 
 public class PodcastViewModel extends AndroidViewModel {
 
-    private PodcastRepository mRepository;
-    private LiveData<List<Podcast>> mAllPodcast;
+    private mirror.co.larry.room.PodcastRepository mRepostory;
+    private LiveData<List<mirror.co.larry.room.Podcast>> mAllPodcast;
 
     public PodcastViewModel(@NonNull Application application) {
         super(application);
-        mRepository = new PodcastRepository(application);
-        mAllPodcast = mRepository.getAllPodcast();
+        mRepostory = new mirror.co.larry.room.PodcastRepository(application);
+        mAllPodcast = mRepostory.getAllPodcast();
     }
 
-    public LiveData<List<Podcast>> getmAllPodcast(){
+    public LiveData<List<mirror.co.larry.room.Podcast>> getAllPodcast(){
         return mAllPodcast;
     }
 
-    public void insert(Podcast podcast){
-        mRepository.insertPodcast(podcast);
+    public void insertPodcast(mirror.co.larry.room.Podcast podcast){
+        mRepostory.insertPodcast(podcast);
     }
 
+    public void deletePodcast(Podcast podcast){
+        mRepostory.deletePodcast(podcast);
+    }
 }

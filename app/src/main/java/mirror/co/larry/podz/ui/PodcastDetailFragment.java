@@ -2,13 +2,13 @@ package mirror.co.larry.podz.ui;
 
 
 import android.app.ProgressDialog;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -33,7 +32,6 @@ import java.util.List;
 
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.model.Episode;
-import mirror.co.larry.podz.model.Podcast;
 import mirror.co.larry.podz.util.ItemOffsetDecoration;
 import mirror.co.larry.podz.util.ItemOffsetDecorationGenre;
 import mirror.co.larry.podz.util.NetworkUtil;
@@ -91,9 +89,9 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
         }
 
         Bundle urlBundle = new Bundle();
-        urlBundle.putString("url_string", NetworkUtil.builtPodcastDetailUrl(id));
+        urlBundle.putString("url_string", NetworkUtil.buildPodcastDetailUrl(id));
         if(getActivity().getSupportLoaderManager().getLoader(1)!=null){
-            getActivity().getSupportLoaderManager().initLoader(0 ,null, this);
+            getActivity().getSupportLoaderManager().restartLoader(1 ,urlBundle, this);
         }
         getActivity().getSupportLoaderManager().initLoader(1, urlBundle, this);
 
@@ -103,11 +101,13 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // insert podcast to favourite
        binding.podcastDetailContent.btFavourite.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               Podcast podcast = new Podcast(podcastId, podcastTitle, podcastDescription,publisher, thumbnail);
-               viewModel.insert(podcast);
+               mirror.co.larry.room.Podcast podcast = new mirror.co.larry.room.Podcast(podcastId, podcastTitle, podcastDescription,publisher, thumbnail);
+               viewModel.insertPodcast(podcast);
+               Snackbar.make(binding.podcastDetailMainLayout, getString(R.string.add_fav_msg) , Snackbar.LENGTH_SHORT).show();
            }
        });
     }
@@ -134,6 +134,7 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
     public void onLoadFinished(@NonNull Loader<String> loader, String result) {
         progressDialog.dismiss();
         if(result!=null){
+            binding.podcastDetailMainLayout.setVisibility(View.VISIBLE);
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 podcastId = jsonObject.getString("id");
@@ -167,20 +168,20 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
 
                 // fill the view with data
 
-                Glide.with(getContext())
+                Glide.with(getActivity())
                         .asBitmap()
                         .load(thumbnail)
-                        .into(UiUtil.getRoundedImageTarget(getContext(), binding.podcastThumbnail, 14));
+                        .into(UiUtil.getRoundedImageTarget(getActivity(), binding.podcastThumbnail, 14));
                 binding.podcastDetailContent.labelAbtPodcast.setText(R.string.about_podcast);
                 binding.podcastDetailContent.podcastDescription.setText(podcastDescription);
                 binding.podcastDetailContent.previousEpisode.setText(R.string.previous_episode);
                 binding.podcastDetailContent.latestEpisode.setText(R.string.latest_episode);
 
                 //genre list
-                genreAdapter = new GenreAdapter(getContext(), genresList);
+                genreAdapter = new GenreAdapter(getActivity(), genresList);
                 binding.podcastDetailContent.rvPodcastGenre.setHasFixedSize(true);
                 binding.podcastDetailContent.rvPodcastGenre.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-                ItemOffsetDecorationGenre offsetDec = new ItemOffsetDecorationGenre(getContext(),R.dimen.genre_offset);
+                ItemOffsetDecorationGenre offsetDec = new ItemOffsetDecorationGenre(getActivity(),R.dimen.genre_offset);
                 binding.podcastDetailContent.rvPodcastGenre.addItemDecoration(offsetDec);
                 binding.podcastDetailContent.rvPodcastGenre.setAdapter(genreAdapter);
 

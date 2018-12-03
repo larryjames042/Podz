@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Podz</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_subscription">Subscription</string>
+    <string name="title_favourite">Favourite</string>
     <string name="title_search">Search</string>
     <string name="title_discover">Discover</string>
 
@@ -25,8 +25,8 @@
 
     // Tab name
     <string name="tab_best">Best</string>
-    <string name="tab_hot">Hot</string>
-    <string name="tab_interview">Interview</string>
+    <string name="tab_self_help">Self-Help</string>
+    <string name="tab_news_politic">News</string>
     <string name="search_hint">Search for podcast</string>
     <string name="play_button">podcast play button</string>
     <string name="podcast_favourite_button">Add to favourite Button</string>
@@ -36,5 +36,7 @@
     <string name="channel_name">channel_name</string>
     <string name="channel_description">channel_description</string>
     <string name="playing">playing</string>
+    <string name="remove_fav_msg">Removed from Favourite</string>
+    <string name="add_fav_msg">Marked as favourite</string>
 
 </resources>

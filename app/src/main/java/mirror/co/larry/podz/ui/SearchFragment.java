@@ -116,8 +116,9 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
             @Override
             public boolean onQueryTextSubmit(String s) {
                 mQueryText = s;
+                mSearchView.clearFocus();
                 Bundle urlBundle = new Bundle();
-                urlBundle.putString("url_string", NetworkUtil.builtPodcastQueryUrl(mQueryText));
+                urlBundle.putString("url_string", NetworkUtil.buildPodcastQueryUrl(mQueryText));
                 if(getActivity().getSupportLoaderManager().getLoader(2)!=null){
                     getActivity().getSupportLoaderManager().restartLoader(2 ,urlBundle, SearchFragment.this);
                 }

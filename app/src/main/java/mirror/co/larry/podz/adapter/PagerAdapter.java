@@ -1,6 +1,7 @@
 package mirror.co.larry.podz.adapter;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -8,8 +9,8 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import mirror.co.larry.podz.ui.BestPodcastFragment;
-import mirror.co.larry.podz.ui.HotPodcastFragment;
-import mirror.co.larry.podz.ui.InteviewPodcastFragment;
+import mirror.co.larry.podz.ui.SelfHelpPodcastFragment;
+import mirror.co.larry.podz.ui.NewsAndPoliticPodcastFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
@@ -26,9 +27,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 return new BestPodcastFragment();
             case 1:
-                return new HotPodcastFragment();
+                return new SelfHelpPodcastFragment();
             case 2:
-                return new InteviewPodcastFragment();
+                return new NewsAndPoliticPodcastFragment();
             default:
                 return null;
         }
