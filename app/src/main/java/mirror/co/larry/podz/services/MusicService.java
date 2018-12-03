@@ -11,18 +11,16 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.audio.MediaCodecAudioRenderer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import mirror.co.larry.podz.MainActivity;
+import mirror.co.larry.podz.ui.MainActivity;
 import mirror.co.larry.podz.R;
 
 public class MusicService extends Service implements Player.EventListener {

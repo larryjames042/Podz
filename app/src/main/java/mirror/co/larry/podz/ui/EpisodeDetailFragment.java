@@ -1,4 +1,4 @@
-package mirror.co.larry.podz;
+package mirror.co.larry.podz.ui;
 
 
 import android.content.Context;
@@ -12,14 +12,15 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
-import mirror.co.larry.podz.Util.HelperUtil;
+import mirror.co.larry.podz.R;
+import mirror.co.larry.podz.util.HelperUtil;
 import mirror.co.larry.podz.databinding.FragmentEpisodeDetailBinding;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class EpisodeDetailFragment extends Fragment {
-
+    public static final String TAG = "EpisodeDetailFragment";
     public static final String KEY_AUDIO = "audio";
     public static final String KEY_ID = "id";
     public static final String KEY_DESCRIPTION = "description";
@@ -93,7 +94,4 @@ public class EpisodeDetailFragment extends Fragment {
     interface OnButtonPlayListener{
         void onPlayButtonClick(String audioUrl, String audioDuration, String episodeName);
     }
-
-
-
 }

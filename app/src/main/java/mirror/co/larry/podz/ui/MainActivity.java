@@ -1,27 +1,22 @@
-package mirror.co.larry.podz;
+package mirror.co.larry.podz.ui;
 
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 
-import mirror.co.larry.podz.adapter.PodcastAdapter;
+import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.databinding.ActivityMainBinding;
 import mirror.co.larry.podz.services.MusicService;
 
@@ -121,4 +116,5 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
             musicService.playPodcast(audioUrl, episodeName);
         }
     }
+
 }

@@ -1,4 +1,4 @@
-package mirror.co.larry.podz.Util;
+package mirror.co.larry.podz.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -1,10 +1,23 @@
-package mirror.co.larry.podz.Model;
+package mirror.co.larry.podz.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+@Entity(tableName = "podcast_table")
 public class Podcast {
+    @PrimaryKey
+    @ColumnInfo
     private String id;
+    @ColumnInfo
+    @NonNull
     private String title;
+    @ColumnInfo
     private String description;
+    @ColumnInfo
     private String publisher;
+    @ColumnInfo
     private String thumbnail;
 
     public Podcast(String id, String title, String description, String publisher, String thumbnail) {

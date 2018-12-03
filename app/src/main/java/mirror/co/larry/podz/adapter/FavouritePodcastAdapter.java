@@ -12,19 +12,18 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import mirror.co.larry.podz.model.Podcast;
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.databinding.PodcastListItemBinding;
+import mirror.co.larry.podz.model.Podcast;
 
-public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastViewHolder> {
+public class FavouritePodcastAdapter extends RecyclerView.Adapter<FavouritePodcastAdapter.PodcastViewHolder> {
     List<Podcast> podcastList;
     Context mContext;
     LayoutInflater layoutInflater;
     OnPodcastClickListener mListener;
 
-    public PodcastAdapter(Context context, List<Podcast> list, OnPodcastClickListener listener){
+    public FavouritePodcastAdapter(Context context, OnPodcastClickListener listener){
         mContext = context;
-        podcastList = list;
         mListener = listener;
     }
 
@@ -52,9 +51,15 @@ public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastV
 
     @Override
     public int getItemCount() {
-        return podcastList.size();
+        if(podcastList!=null)
+            return podcastList.size();
+        return 0;
     }
 
+    public void setPodcast(List<Podcast> list){
+        podcastList = list;
+        notifyDataSetChanged();
+    }
 
     public class PodcastViewHolder extends RecyclerView.ViewHolder {
 
@@ -78,5 +83,4 @@ public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastV
     public interface OnPodcastClickListener {
         void podcastItemClickListener(View view, String id);
     }
-
 }

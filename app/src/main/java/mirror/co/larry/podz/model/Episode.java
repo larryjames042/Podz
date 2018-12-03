@@ -1,4 +1,4 @@
-package mirror.co.larry.podz.Model;
+package mirror.co.larry.podz.model;
 
 public class Episode {
     private String audio;

@@ -35,34 +35,35 @@
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/exo_pause"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:text="1:00:00" />
-
-    <ImageButton
-        android:id="@id/exo_play"
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:background="@color/transparent"
-        android:src="@drawable/ic_play"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/exo_duration"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <ImageButton
+            android:id="@id/exo_play"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_play"
+            />
 
-    <ImageButton
-        android:id="@id/exo_pause"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:background="@color/transparent"
-        android:src="@drawable/ic_pause"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/exo_duration"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageButton
+            android:id="@id/exo_pause"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_pause" />
+    </LinearLayout>
+
 
 
 </android.support.constraint.ConstraintLayout>

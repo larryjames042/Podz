@@ -1,15 +1,17 @@
-package mirror.co.larry.podz;
+package mirror.co.larry.podz.ui;
 
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.adapter.PagerAdapter;
 import mirror.co.larry.podz.databinding.FragmentDiscoverBinding;
 
@@ -19,6 +21,8 @@ import mirror.co.larry.podz.databinding.FragmentDiscoverBinding;
  */
 public class DiscoverFragment extends Fragment {
 
+    private PagerAdapter pagerAdapter;
+    FragmentDiscoverBinding binding;
 
     public DiscoverFragment() {
         // Required empty public constructor
@@ -29,7 +33,7 @@ public class DiscoverFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final FragmentDiscoverBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_discover, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_discover, container, false);
         ((AppCompatActivity)getActivity()).setSupportActionBar(binding.appBar.toolbar);
         binding.appBar.toolbar.setTitle(R.string.app_name);
 
@@ -40,7 +44,7 @@ public class DiscoverFragment extends Fragment {
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         // Using PagerAdapter to manage page views  in fragment
-        PagerAdapter pagerAdapter = new PagerAdapter(getActivity().getSupportFragmentManager(), binding.tabLayout.getTabCount());
+        pagerAdapter = new PagerAdapter(getChildFragmentManager(), binding.tabLayout.getTabCount());
         binding.pager.setAdapter(pagerAdapter);
 
         // Setting a listener for clicks

@@ -13,8 +13,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import mirror.co.larry.podz.EpisodeDetailFragment;
-import mirror.co.larry.podz.Model.Episode;
+import mirror.co.larry.podz.ui.EpisodeDetailFragment;
+import mirror.co.larry.podz.model.Episode;
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.databinding.PreviousEpisodeListItemBinding;
 

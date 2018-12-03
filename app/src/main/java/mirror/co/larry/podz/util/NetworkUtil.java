@@ -1,4 +1,4 @@
-package mirror.co.larry.podz.Util;
+package mirror.co.larry.podz.util;
 
 import android.net.Uri;
 
@@ -12,11 +12,15 @@ import java.net.URL;
 public  class NetworkUtil {
     final static String LISTEN_NOTE_BASE_URL = "https://listennotes.p.mashape.com/api/v1";
     final static String BEST_PODCAST = "best_podcasts";
+    final static String QUERY_KEY = "q";
+    final static String TYPE_KEY = "type";
     final static String PODCAST = "podcasts";
+    final static String SEARCH = "search";
     final static String X_MASHAPE_KEY = "X-Mashape-Key";
     final static String X_MASHAPE_VALUE = "GlySrzrNSTmshoG80vE2H6EER9W2p1wJHyKjsnXb2DqDJ3EPkt";
     final static String ACCEPT_KEY = "Accept";
     final static String ACCEPT_VALUE = "application/json";
+
 
 
     private static  final String LOG_TAG = NetworkUtil.class.getSimpleName();
@@ -34,6 +38,16 @@ public  class NetworkUtil {
         Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
                 .appendPath(PODCAST)
                 .appendPath(podcastId)
+                .build();
+
+        return builtURI.toString();
+    }
+
+    public static String builtPodcastQueryUrl(String queryText){
+        Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
+                .appendPath(SEARCH)
+                .appendQueryParameter(QUERY_KEY, queryText)
+                .appendQueryParameter(TYPE_KEY, "podcast")
                 .build();
 
         return builtURI.toString();

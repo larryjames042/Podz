@@ -16,13 +16,13 @@ import mirror.co.larry.podz.model.Podcast;
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.databinding.PodcastListItemBinding;
 
-public class PodcastAdapter extends RecyclerView.Adapter<PodcastAdapter.PodcastViewHolder> {
+public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.PodcastViewHolder> {
     List<Podcast> podcastList;
     Context mContext;
     LayoutInflater layoutInflater;
     OnPodcastClickListener mListener;
 
-    public PodcastAdapter(Context context, List<Podcast> list, OnPodcastClickListener listener){
+    public SearchResultAdapter(Context context, List<Podcast> list, OnPodcastClickListener listener){
         mContext = context;
         podcastList = list;
         mListener = listener;
