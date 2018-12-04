@@ -4,9 +4,11 @@ package mirror.co.larry.podz.ui;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -15,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,12 +55,6 @@ public class BestPodcastFragment extends Fragment implements LoaderManager.Loade
         super.onResume();
         Log.d("lifecycle : ", "Best onResume");
 
-        Bundle urlBundle = new Bundle();
-        urlBundle.putString("url_string", NetworkUtil.buildBestPodcastUrl());
-        if(getActivity().getSupportLoaderManager().getLoader(0)!=null){
-            getActivity().getSupportLoaderManager().initLoader(0 ,null, this);
-        }
-        getActivity().getSupportLoaderManager().initLoader(0, urlBundle, this);
     }
 
     @Override
@@ -111,6 +109,21 @@ public class BestPodcastFragment extends Fragment implements LoaderManager.Loade
         ItemOffsetDecoration decoration = new ItemOffsetDecoration(getActivity(), R.dimen.recyclerview_item_offset);
         binding.rvBestPodcast.addItemDecoration(decoration);
 
+        // check connection
+        if(NetworkUtil.isOnline(getActivity())){
+            Bundle urlBundle = new Bundle();
+            urlBundle.putString("url_string", NetworkUtil.buildBestPodcastUrl());
+            if(getActivity().getSupportLoaderManager().getLoader(0)!=null){
+                getActivity().getSupportLoaderManager().initLoader(0 ,null, this);
+            }
+            getActivity().getSupportLoaderManager().initLoader(0, urlBundle, this);
+        }else{
+            Glide.with(getContext()).load(R.drawable.ic_offline).into(binding.errorImageView);
+            binding.rvBestPodcast.setBackgroundResource(R.drawable.ic_offline);
+            Snackbar.make(binding.getRoot(), getString(R.string.check_network_msg), Snackbar.LENGTH_LONG).show();
+        }
+
+
         return view;
     }
 
@@ -125,7 +138,7 @@ public class BestPodcastFragment extends Fragment implements LoaderManager.Loade
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
-                .addToBackStack(null)
+                .addToBackStack(TAG)
                 .commit();
     }
 

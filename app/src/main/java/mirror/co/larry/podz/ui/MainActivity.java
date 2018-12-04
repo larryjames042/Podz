@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +35,16 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         // default Fragment
-        loadFragment(new DiscoverFragment());
+        if(savedInstanceState==null){
+            loadFragment(new DiscoverFragment());
+        }else{
+            int index = getSupportFragmentManager().getBackStackEntryCount()-1;
+            FragmentManager.BackStackEntry backEntry = getSupportFragmentManager().getBackStackEntryAt(index);
+            String tag = backEntry.getName();
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+            loadFragment(fragment);
+        }
+
 
        binding.bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         binding.playerSmallViewContainer.setOnClickListener(new View.OnClickListener() {

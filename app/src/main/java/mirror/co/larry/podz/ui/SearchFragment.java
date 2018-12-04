@@ -6,10 +6,12 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -20,6 +22,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,11 +46,8 @@ import mirror.co.larry.podz.databinding.FragmentSearchBinding;
  * A simple {@link Fragment} subclass.
  */
 public class SearchFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>, SearchResultAdapter.OnPodcastClickListener {
-
+    private static final String TAG = SearchFragment.class.getSimpleName();
     private FragmentSearchBinding binding;
-    private MenuItem searchItem;
-    private SearchView mSearchView;
-    private EditText searchEditText;
     private String mQueryText;
     private ProgressDialog progressDialog;
     private List<Podcast> podcastList;
@@ -57,7 +59,6 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         progressDialog = new ProgressDialog(getContext());
     }
 
@@ -67,62 +68,36 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false);
         View v = binding.getRoot();
-        podcastList = new ArrayList<Podcast>();
-        ((AppCompatActivity)getActivity()).setSupportActionBar(binding.appBar.toolbar);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(false);
+        podcastList = new ArrayList<>();
+
         ItemOffsetDecoration decoration = new ItemOffsetDecoration(getActivity(), R.dimen.recyclerview_item_offset);
         binding.rvSearchResult.addItemDecoration(decoration);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);
         binding.rvSearchResult.setHasFixedSize(true);
         binding.rvSearchResult.setLayoutManager(layoutManager);
 
-        return v;
-    }
+        binding.searchView.setActivated(true);
+        binding.searchView.onActionViewExpanded();
+        binding.searchView.setIconified(false);
+        binding.searchView.requestFocus();
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_search, menu);
-        searchItem = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView)searchItem.getActionView();
-
-        int searchEditTextId = android.support.v7.appcompat.R.id.search_src_text;
-        searchEditText = (EditText)mSearchView.findViewById(searchEditTextId);
-        searchEditText.setTextColor( getResources().getColor( R.color.grey_900));
-        searchEditText.setHintTextColor(getResources().getColor( R.color.grey_500));
-        searchEditText.setBackground(getResources().getDrawable(R.drawable.searchview_background));
-
-        mSearchView.setActivated(true);
-        mSearchView.setQueryHint(getString(R.string.search_hint));
-        mSearchView.onActionViewExpanded();
-        searchItem.expandActionView();
-        mSearchView.requestFocus();
-        mSearchView.setIconified(false);
-
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                return true;
-            }
-        });
-
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 mQueryText = s;
-                mSearchView.clearFocus();
-                Bundle urlBundle = new Bundle();
-                urlBundle.putString("url_string", NetworkUtil.buildPodcastQueryUrl(mQueryText));
-                if(getActivity().getSupportLoaderManager().getLoader(2)!=null){
-                    getActivity().getSupportLoaderManager().restartLoader(2 ,urlBundle, SearchFragment.this);
+                binding.searchView.clearFocus();
+                // check the connection first
+                if(NetworkUtil.isOnline(getActivity())){
+                    Bundle urlBundle = new Bundle();
+                    urlBundle.putString("url_string", NetworkUtil.buildPodcastQueryUrl(mQueryText));
+                    if(getActivity().getSupportLoaderManager().getLoader(2)!=null){
+                        getActivity().getSupportLoaderManager().restartLoader(2 ,urlBundle, SearchFragment.this);
+                    }
+                    getActivity().getSupportLoaderManager().initLoader(2, urlBundle, SearchFragment.this);
+                }else{
+                    Snackbar.make(binding.getRoot(), getString(R.string.check_network_msg), Snackbar.LENGTH_LONG).show();
                 }
-                getActivity().getSupportLoaderManager().initLoader(2, urlBundle, SearchFragment.this);
+
                 return true;
             }
 
@@ -132,18 +107,12 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
             }
         });
 
-        super.onCreateOptionsMenu(menu,inflater);
+        return v;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.action_search:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @NonNull
@@ -196,7 +165,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
-                .addToBackStack(null)
+                .addToBackStack(TAG)
                 .commit();
     }
 }

@@ -1,5 +1,9 @@
 package mirror.co.larry.podz.util;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.net.Uri;
 
 import java.io.BufferedReader;
@@ -28,7 +32,7 @@ public  class NetworkUtil {
 
     private static  final String LOG_TAG = NetworkUtil.class.getSimpleName();
 
-
+    // build best podcast url
     public static  String buildBestPodcastUrl(){
         Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
                 .appendPath(BEST_PODCAST)
@@ -37,6 +41,7 @@ public  class NetworkUtil {
         return builtURI.toString();
     }
 
+    // build self-help url
     public static  String buildSelfHelpPodcastUrl(){
         Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
                 .appendPath(BEST_PODCAST)
@@ -45,7 +50,7 @@ public  class NetworkUtil {
 
         return builtURI.toString();
     }
-
+    // build news and politics url
     public static  String buildNewsAndPoliticPodcastUrl(){
         Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
                 .appendPath(BEST_PODCAST)
@@ -54,7 +59,7 @@ public  class NetworkUtil {
 
         return builtURI.toString();
     }
-
+    // build podcast detail url
     public static String buildPodcastDetailUrl(String podcastId){
         Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
                 .appendPath(PODCAST)
@@ -64,6 +69,7 @@ public  class NetworkUtil {
         return builtURI.toString();
     }
 
+    // build query url
     public static String buildPodcastQueryUrl(String queryText){
         Uri builtURI = Uri.parse(LISTEN_NOTE_BASE_URL).buildUpon()
                 .appendPath(SEARCH)
@@ -122,6 +128,14 @@ public  class NetworkUtil {
             }
         }
         return podcastJSONString;
+    }
 
+    // check network state
+    public static boolean isOnline(Context context){
+        boolean isWifiConn = false;
+        boolean isMobileConn = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo!=null && networkInfo.isConnected();
     }
 }

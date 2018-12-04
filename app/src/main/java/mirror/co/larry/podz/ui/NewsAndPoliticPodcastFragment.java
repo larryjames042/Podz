@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -49,12 +50,7 @@ public class NewsAndPoliticPodcastFragment extends Fragment implements LoaderMan
     @Override
     public void onResume() {
         super.onResume();
-        Bundle urlBundle = new Bundle();
-        urlBundle.putString("url_string", NetworkUtil.buildNewsAndPoliticPodcastUrl());
-        if(getActivity().getSupportLoaderManager().getLoader(4)!=null){
-            getActivity().getSupportLoaderManager().initLoader(4 ,null, this);
-        }
-        getActivity().getSupportLoaderManager().initLoader(4, urlBundle, this);
+
     }
 
     @Override
@@ -71,6 +67,17 @@ public class NewsAndPoliticPodcastFragment extends Fragment implements LoaderMan
         binding.rvNewsPoliticPodcast.setLayoutManager(layoutManager);
         ItemOffsetDecoration decoration = new ItemOffsetDecoration(getActivity(), R.dimen.recyclerview_item_offset);
         binding.rvNewsPoliticPodcast.addItemDecoration(decoration);
+
+        if(NetworkUtil.isOnline(getActivity())){
+            Bundle urlBundle = new Bundle();
+            urlBundle.putString("url_string", NetworkUtil.buildNewsAndPoliticPodcastUrl());
+            if(getActivity().getSupportLoaderManager().getLoader(4)!=null){
+                getActivity().getSupportLoaderManager().initLoader(4 ,null, this);
+            }
+            getActivity().getSupportLoaderManager().initLoader(4, urlBundle, this);
+        }else{
+            Snackbar.make(binding.getRoot(), getString(R.string.check_network_msg), Snackbar.LENGTH_LONG).show();
+        }
 
         return view;
     }

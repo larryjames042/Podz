@@ -87,13 +87,18 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
         if(getArguments().containsKey(PODCAST_ID)){
             id = getArguments().getString(PODCAST_ID);
         }
-
-        Bundle urlBundle = new Bundle();
-        urlBundle.putString("url_string", NetworkUtil.buildPodcastDetailUrl(id));
-        if(getActivity().getSupportLoaderManager().getLoader(1)!=null){
-            getActivity().getSupportLoaderManager().restartLoader(1 ,urlBundle, this);
+        // check the internet connection
+        if(NetworkUtil.isOnline(getActivity())){
+            Bundle urlBundle = new Bundle();
+            urlBundle.putString("url_string", NetworkUtil.buildPodcastDetailUrl(id));
+            if(getActivity().getSupportLoaderManager().getLoader(1)!=null){
+                getActivity().getSupportLoaderManager().restartLoader(1 ,urlBundle, this);
+            }
+            getActivity().getSupportLoaderManager().initLoader(1, urlBundle, this);
+        }else{
+            Snackbar.make(binding.getRoot(), getString(R.string.check_network_msg), Snackbar.LENGTH_LONG).show();
         }
-        getActivity().getSupportLoaderManager().initLoader(1, urlBundle, this);
+
 
         return view;
     }
@@ -119,7 +124,7 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_container, fragment, EpisodeDetailFragment.TAG)
-                .addToBackStack(null)
+                .addToBackStack(TAG)
                 .commit();
     }
 

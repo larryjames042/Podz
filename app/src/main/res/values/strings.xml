@@ -38,5 +38,6 @@
     <string name="playing">playing</string>
     <string name="remove_fav_msg">Removed from Favourite</string>
     <string name="add_fav_msg">Marked as favourite</string>
+    <string name="check_network_msg">Check your internet connection</string>
 
 </resources>

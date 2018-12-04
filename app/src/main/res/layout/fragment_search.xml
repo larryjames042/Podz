@@ -9,12 +9,12 @@
         android:layout_height="match_parent"
         tools:context=".ui.SearchFragment">
 
-        <include
-            android:id="@+id/app_bar"
-            layout="@layout/toolbar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <android.support.v7.widget.SearchView
+            android:elevation="@dimen/searchview_elevation"
+            android:id="@+id/search_view"
+            app:queryHint="@string/search_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_search_result"
