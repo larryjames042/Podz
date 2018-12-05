@@ -14,13 +14,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.List;
 
+import mirror.co.larry.podz.App.AnalyticsApplication;
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.adapter.FavouritePodcastAdapter;
 import mirror.co.larry.podz.databinding.FragmentFavBinding;
@@ -33,15 +38,31 @@ import mirror.co.larry.podz.viewModel.PodcastViewModel;
  * A simple {@link Fragment} subclass.
  */
 public class FavFragment extends Fragment implements FavouritePodcastAdapter.OnPodcastClickListener, RecyclerViewItemTouchHelper.RecyclerItemTouchHelperListener {
-
+    public static final String TAG = FavFragment.class.getSimpleName();
     PodcastViewModel mViewModel;
     FragmentFavBinding binding;
     FavouritePodcastAdapter adapter;
     List<mirror.co.larry.room.Podcast> podcastList;
+    Tracker mTracker;
     public FavFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Obtain the shared Tracker instance.
+        AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "FavFragmentScreen ");
+        mTracker.setScreenName(TAG );
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

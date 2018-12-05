@@ -26,6 +26,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +36,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import mirror.co.larry.podz.App.AnalyticsApplication;
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.model.Podcast;
 import mirror.co.larry.podz.util.ItemOffsetDecoration;
@@ -52,6 +56,8 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     private ProgressDialog progressDialog;
     private List<Podcast> podcastList;
     private SearchResultAdapter searchResultAdapter;
+    Tracker mTracker;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -60,6 +66,17 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         progressDialog = new ProgressDialog(getContext());
+        // Obtain the shared Tracker instance.
+        AnalyticsApplication application = (AnalyticsApplication)getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "SearchFragmentScreen ");
+        mTracker.setScreenName(TAG );
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     @Override

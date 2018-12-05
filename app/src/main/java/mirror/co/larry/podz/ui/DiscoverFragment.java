@@ -3,14 +3,20 @@ package mirror.co.larry.podz.ui;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
+import mirror.co.larry.podz.App.AnalyticsApplication;
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.adapter.PagerAdapter;
 import mirror.co.larry.podz.databinding.FragmentDiscoverBinding;
@@ -21,13 +27,29 @@ import mirror.co.larry.podz.databinding.FragmentDiscoverBinding;
  */
 public class DiscoverFragment extends Fragment {
 
+    public static final String TAG = DiscoverFragment.class.getSimpleName();
     private PagerAdapter pagerAdapter;
     FragmentDiscoverBinding binding;
-
+    Tracker mTracker;
     public DiscoverFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+            // Obtain the shared Tracker instance.
+        AnalyticsApplication application = (AnalyticsApplication)getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "DiscoverFragmentScreen ");
+        mTracker.setScreenName(TAG );
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,5 +91,6 @@ public class DiscoverFragment extends Fragment {
         View v = binding.getRoot();
         return v;
     }
+
 
 }

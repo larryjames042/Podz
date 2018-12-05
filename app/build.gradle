@@ -47,6 +47,10 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
 
-    annotationProcessor "androidx.databinding:databinding-compiler:3.0.1"
+    // google analytic and ads
+    implementation 'com.google.android.gms:play-services-analytics:16.0.5'
+    implementation 'com.google.android.gms:play-services-ads:17.1.1'
+
+    annotationProcessor "androidx.databinding:databinding-compiler:3.2.1"
     implementation project(':room')
 }

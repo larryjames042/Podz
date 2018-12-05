@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.exoplayer2.SimpleExoPlayer;
+
+import java.io.Serializable;
 
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.databinding.ActivityMainBinding;
@@ -38,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
         if(savedInstanceState==null){
             loadFragment(new DiscoverFragment());
         }else{
-            int index = getSupportFragmentManager().getBackStackEntryCount()-1;
+            int index = getSupportFragmentManager().getBackStackEntryCount();
             FragmentManager.BackStackEntry backEntry = getSupportFragmentManager().getBackStackEntryAt(index);
             String tag = backEntry.getName();
             Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
@@ -50,6 +53,16 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
         binding.playerSmallViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                binding.playerSmallViewContainer.setVisibility(View.INVISIBLE);
+
+                if(exoPlayer!=null){
+                    PlayerFragment playerFragment = new PlayerFragment();
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .add(R.id.content_container, playerFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
 
             }
         });
@@ -66,10 +79,10 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
                 case R.id.navigation_discover:
                     fragment = new DiscoverFragment();
                     break;
-                case R.id.navigation_Subscription:
+                case R.id.navigation_favourite:
                     fragment = new FavFragment();
                     break;
-                case R.id.navigation_Search:
+                case R.id.navigation_search:
                     fragment = new SearchFragment();
                     break;
             }
@@ -98,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
             musicBound = true;
             exoPlayer = binder.getExoplayerInstance();
             binding.playerView.setPlayer(exoPlayer);
-
         }
 
         @Override
