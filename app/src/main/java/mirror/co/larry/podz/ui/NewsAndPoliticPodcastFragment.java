@@ -2,6 +2,7 @@ package mirror.co.larry.podz.ui;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,20 +29,20 @@ import mirror.co.larry.podz.databinding.FragmentNewsPoliticPodcastBinding;
 import mirror.co.larry.podz.model.Podcast;
 import mirror.co.larry.podz.util.ItemOffsetDecoration;
 import mirror.co.larry.podz.util.NetworkUtil;
+import mirror.co.larry.podz.util.OnVisibleListener;
 import mirror.co.larry.podz.util.PodcastLoader;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NewsAndPoliticPodcastFragment extends Fragment implements LoaderManager.LoaderCallbacks<String> , PodcastAdapter.OnPodcastClickListener{
+public class NewsAndPoliticPodcastFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>{
 
     public static final String TAG = "NewsAndPoliticPodcastFragment";
     private List<Podcast> podcastList;
     private PodcastAdapter podcastAdapter;
     private FragmentNewsPoliticPodcastBinding binding;
     private ProgressDialog progressDialog;
-
 
     public NewsAndPoliticPodcastFragment() {
         // Required empty public constructor
@@ -82,6 +83,12 @@ public class NewsAndPoliticPodcastFragment extends Fragment implements LoaderMan
         return view;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+
     @NonNull
     @Override
     public Loader<String> onCreateLoader(int i, @Nullable Bundle bundle) {
@@ -106,7 +113,7 @@ public class NewsAndPoliticPodcastFragment extends Fragment implements LoaderMan
                     String publisher = podcast.getString("publisher");
                     podcastList.add(new Podcast(id,title,description,publisher,thumbnail));
                 }
-                podcastAdapter = new PodcastAdapter(getActivity(), podcastList, NewsAndPoliticPodcastFragment.this);
+                podcastAdapter = new PodcastAdapter(getActivity(), podcastList, (PodcastAdapter.OnPodcastClickListener) getActivity());
                 binding.rvNewsPoliticPodcast.setAdapter(podcastAdapter);
 
 
@@ -119,18 +126,5 @@ public class NewsAndPoliticPodcastFragment extends Fragment implements LoaderMan
     @Override
     public void onLoaderReset(@NonNull Loader<String> loader) {
 
-    }
-
-    @Override
-    public void podcastItemClickListener(View view, String id) {
-        Bundle bundle = new Bundle();
-        bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
-        Fragment podcastDetailFragment = new PodcastDetailFragment();
-        podcastDetailFragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
-                .addToBackStack(null)
-                .commit();
     }
 }

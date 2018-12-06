@@ -2,6 +2,7 @@ package mirror.co.larry.podz.ui;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,21 +11,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -38,24 +30,26 @@ import java.util.List;
 
 import mirror.co.larry.podz.App.AnalyticsApplication;
 import mirror.co.larry.podz.R;
+import mirror.co.larry.podz.adapter.PodcastAdapter;
 import mirror.co.larry.podz.model.Podcast;
 import mirror.co.larry.podz.util.ItemOffsetDecoration;
 import mirror.co.larry.podz.util.NetworkUtil;
+import mirror.co.larry.podz.util.OnVisibleListener;
 import mirror.co.larry.podz.util.PodcastLoader;
-import mirror.co.larry.podz.adapter.SearchResultAdapter;
 import mirror.co.larry.podz.databinding.FragmentSearchBinding;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>, SearchResultAdapter.OnPodcastClickListener {
+public class SearchFragment extends Fragment implements LoaderManager.LoaderCallbacks<String> {
     private static final String TAG = SearchFragment.class.getSimpleName();
     private FragmentSearchBinding binding;
     private String mQueryText;
     private ProgressDialog progressDialog;
     private List<Podcast> podcastList;
-    private SearchResultAdapter searchResultAdapter;
+    private PodcastAdapter searchResultAdapter;
+    private OnVisibleListener mListener;
     Tracker mTracker;
 
     public SearchFragment() {
@@ -69,11 +63,13 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication)getActivity().getApplication();
         mTracker = application.getDefaultTracker();
+        Log.d("searchfragment : ", "onCreate");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("searchfragment : ", "onResume");
         Log.i(TAG, "SearchFragmentScreen ");
         mTracker.setScreenName(TAG );
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
@@ -123,13 +119,37 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                 return false;
             }
         });
-
+        mListener.showBottomNav(true);
+        Log.d("searchfragment : ", "onCreateView");
         return v;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(mListener==null){
+            mListener = (OnVisibleListener) context;
+        }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d("searchfragment : ", "onSave");
+    }
+
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("searchfragment : ", "onStop");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("searchfragment : ", "onDestroy");
     }
 
     @NonNull
@@ -158,7 +178,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                     String publisher = podcast.getString("publisher_original");
                     podcastList.add(new Podcast(id,title,description,publisher,thumbnail));
                 }
-                searchResultAdapter = new SearchResultAdapter(getActivity(), podcastList, SearchFragment.this);
+                searchResultAdapter = new PodcastAdapter(getActivity(), podcastList, (PodcastAdapter.OnPodcastClickListener) getActivity());
                 binding.rvSearchResult.setAdapter(searchResultAdapter);
 
 
@@ -171,18 +191,5 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onLoaderReset(@NonNull Loader<String> loader) {
 
-    }
-
-    @Override
-    public void podcastItemClickListener(View view, String id) {
-        Bundle bundle = new Bundle();
-        bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
-        Fragment podcastDetailFragment = new PodcastDetailFragment();
-        podcastDetailFragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
-                .addToBackStack(TAG)
-                .commit();
     }
 }

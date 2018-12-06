@@ -15,17 +15,24 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.SimpleExoPlayer;
 
 import java.io.Serializable;
 
 import mirror.co.larry.podz.R;
+import mirror.co.larry.podz.adapter.FavouritePodcastAdapter;
+import mirror.co.larry.podz.adapter.PodcastAdapter;
 import mirror.co.larry.podz.databinding.ActivityMainBinding;
 import mirror.co.larry.podz.services.MusicService;
+import mirror.co.larry.podz.util.OnVisibleListener;
 
-public class MainActivity extends AppCompatActivity implements EpisodeDetailFragment.OnButtonPlayListener {
-    private static final String BACK_STACK_ROOT_TAG = "root_fragment";
+public class MainActivity extends AppCompatActivity implements
+        EpisodeDetailFragment.OnButtonPlayListener,
+        PodcastAdapter.OnPodcastClickListener,
+        OnVisibleListener,
+        FavouritePodcastAdapter.OnFavPodcastClickListener {
     private ActivityMainBinding binding;
     private MusicService musicService;
     private  boolean musicBound = false;
@@ -40,13 +47,14 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
         // default Fragment
         if(savedInstanceState==null){
             loadFragment(new DiscoverFragment());
-        }else{
-            int index = getSupportFragmentManager().getBackStackEntryCount();
-            FragmentManager.BackStackEntry backEntry = getSupportFragmentManager().getBackStackEntryAt(index);
-            String tag = backEntry.getName();
-            Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-            loadFragment(fragment);
         }
+//        else{
+//            int index = getSupportFragmentManager().getBackStackEntryCount();
+//            FragmentManager.BackStackEntry backEntry = getSupportFragmentManager().getBackStackEntryAt(index);
+//            String tag = backEntry.getName();
+//            Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+//            loadFragment(fragment);
+//        }
 
 
        binding.bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -146,5 +154,43 @@ public class MainActivity extends AppCompatActivity implements EpisodeDetailFrag
             musicService.playPodcast(audioUrl, episodeName);
         }
     }
+
+    @Override
+    public void podcastItemClickListener(View view, String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
+        Fragment podcastDetailFragment = new PodcastDetailFragment();
+        podcastDetailFragment.setArguments(bundle);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void favPodcastItemClickListener(View view, String id) {
+        binding.bottomNavigation.setVisibility(View.GONE);
+        Bundle bundle = new Bundle();
+        bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
+        Fragment podcastDetailFragment = new PodcastDetailFragment();
+        podcastDetailFragment.setArguments(bundle);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void showBottomNav(boolean isShow) {
+        if (isShow) {
+            binding.bottomNavigation.setVisibility(View.VISIBLE);
+        }else{
+            binding.bottomNavigation.setVisibility(View.GONE);
+        }
+        return;
+    }
+
 
 }

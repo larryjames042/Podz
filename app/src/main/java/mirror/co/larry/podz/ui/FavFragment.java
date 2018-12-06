@@ -2,11 +2,10 @@ package mirror.co.larry.podz.ui;
 
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -18,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -29,21 +27,23 @@ import mirror.co.larry.podz.App.AnalyticsApplication;
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.adapter.FavouritePodcastAdapter;
 import mirror.co.larry.podz.databinding.FragmentFavBinding;
-import mirror.co.larry.podz.model.Podcast;
 import mirror.co.larry.podz.util.ItemOffsetDecoration;
+import mirror.co.larry.podz.util.OnVisibleListener;
 import mirror.co.larry.podz.util.RecyclerViewItemTouchHelper;
 import mirror.co.larry.podz.viewModel.PodcastViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FavFragment extends Fragment implements FavouritePodcastAdapter.OnPodcastClickListener, RecyclerViewItemTouchHelper.RecyclerItemTouchHelperListener {
+public class FavFragment extends Fragment implements FavouritePodcastAdapter.OnFavPodcastClickListener, RecyclerViewItemTouchHelper.RecyclerItemTouchHelperListener {
     public static final String TAG = FavFragment.class.getSimpleName();
     PodcastViewModel mViewModel;
     FragmentFavBinding binding;
     FavouritePodcastAdapter adapter;
     List<mirror.co.larry.room.Podcast> podcastList;
     Tracker mTracker;
+    OnVisibleListener mListener;
+
     public FavFragment() {
         // Required empty public constructor
     }
@@ -81,7 +81,7 @@ public class FavFragment extends Fragment implements FavouritePodcastAdapter.OnP
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);
         binding.rvFavPodcast.setHasFixedSize(true);
         binding.rvFavPodcast.setLayoutManager(layoutManager);
-        adapter = new FavouritePodcastAdapter(getContext(), this);
+        adapter = new FavouritePodcastAdapter(getContext(), (FavouritePodcastAdapter.OnFavPodcastClickListener) getActivity());
 
         mViewModel = ViewModelProviders.of(this).get(PodcastViewModel.class);
 
@@ -98,13 +98,23 @@ public class FavFragment extends Fragment implements FavouritePodcastAdapter.OnP
 
         ItemTouchHelper.SimpleCallback callback = new RecyclerViewItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(callback).attachToRecyclerView(binding.rvFavPodcast);
+
+        // set true when Fav fragment is visible.
+        mListener.showBottomNav(true);
         return view;
     }
 
-    //     Podcast onClick --->  PodcastDetailFragment
-
     @Override
-    public void podcastItemClickListener(View view, String id) {
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(mListener == null){
+            mListener = (OnVisibleListener)context;
+        }
+    }
+
+    //    Fav Podcast onClick --->  PodcastDetailFragment
+    @Override
+    public void favPodcastItemClickListener(View view, String id) {
         Bundle bundle = new Bundle();
         bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
         Fragment podcastDetailFragment = new PodcastDetailFragment();

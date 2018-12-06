@@ -31,6 +31,7 @@ import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.model.Podcast;
 import mirror.co.larry.podz.util.ItemOffsetDecoration;
 import mirror.co.larry.podz.util.NetworkUtil;
+import mirror.co.larry.podz.util.OnVisibleListener;
 import mirror.co.larry.podz.util.PodcastLoader;
 import mirror.co.larry.podz.adapter.PodcastAdapter;
 import mirror.co.larry.podz.databinding.FragmentBestPodcastBinding;
@@ -39,7 +40,7 @@ import mirror.co.larry.podz.databinding.FragmentBestPodcastBinding;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BestPodcastFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>, PodcastAdapter.OnPodcastClickListener {
+public class BestPodcastFragment extends Fragment implements LoaderManager.LoaderCallbacks<String>{
     public static final String TAG = "BestPodcastFragment";
     private List<Podcast>  podcastList;
     private PodcastAdapter podcastAdapter;
@@ -129,19 +130,6 @@ public class BestPodcastFragment extends Fragment implements LoaderManager.Loade
 
 
 
-    @Override
-    public void podcastItemClickListener(View view, String id) {
-        Bundle bundle = new Bundle();
-        bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
-        Fragment podcastDetailFragment = new PodcastDetailFragment();
-        podcastDetailFragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
-                .addToBackStack(TAG)
-                .commit();
-    }
-
     @NonNull
     @Override
     public Loader<String> onCreateLoader(int i, @Nullable Bundle bundle) {
@@ -166,7 +154,7 @@ public class BestPodcastFragment extends Fragment implements LoaderManager.Loade
                     String publisher = podcast.getString("publisher");
                     podcastList.add(new Podcast(id,title,description,publisher,thumbnail));
                 }
-                podcastAdapter = new PodcastAdapter(getActivity(), podcastList, BestPodcastFragment.this);
+                podcastAdapter = new PodcastAdapter(getActivity(), podcastList, (PodcastAdapter.OnPodcastClickListener) getActivity());
                 binding.rvBestPodcast.setAdapter(podcastAdapter);
 
 
@@ -180,4 +168,5 @@ public class BestPodcastFragment extends Fragment implements LoaderManager.Loade
     public void onLoaderReset(@NonNull Loader<String> loader) {
 
     }
+
 }

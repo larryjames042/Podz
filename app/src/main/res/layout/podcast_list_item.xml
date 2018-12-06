@@ -29,7 +29,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/bt_share"
+                android:maxLines="@integer/maxline_2"
+                android:ellipsize="end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/podcast_image"
                 app:layout_constraintTop_toTopOf="@+id/podcast_image"
                 tools:text="Podcast Name" />
@@ -39,6 +42,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:maxLines="@integer/maxline_2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/podcast_name"
                 app:layout_constraintTop_toBottomOf="@+id/podcast_name"
                 tools:text="by Author" />

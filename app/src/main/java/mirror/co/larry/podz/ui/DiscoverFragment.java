@@ -1,12 +1,12 @@
 package mirror.co.larry.podz.ui;
 
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +20,7 @@ import mirror.co.larry.podz.App.AnalyticsApplication;
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.adapter.PagerAdapter;
 import mirror.co.larry.podz.databinding.FragmentDiscoverBinding;
+import mirror.co.larry.podz.util.OnVisibleListener;
 
 
 /**
@@ -31,6 +32,7 @@ public class DiscoverFragment extends Fragment {
     private PagerAdapter pagerAdapter;
     FragmentDiscoverBinding binding;
     Tracker mTracker;
+    OnVisibleListener mVisibleListener;
     public DiscoverFragment() {
         // Required empty public constructor
     }
@@ -89,8 +91,15 @@ public class DiscoverFragment extends Fragment {
         });
 
         View v = binding.getRoot();
+        mVisibleListener.showBottomNav(true);
         return v;
     }
 
-
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(mVisibleListener==null){
+            mVisibleListener = (OnVisibleListener)context;
+        }
+    }
 }

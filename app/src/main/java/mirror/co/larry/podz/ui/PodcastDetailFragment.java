@@ -4,13 +4,16 @@ package mirror.co.larry.podz.ui;
 import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -35,6 +39,7 @@ import mirror.co.larry.podz.model.Episode;
 import mirror.co.larry.podz.util.ItemOffsetDecoration;
 import mirror.co.larry.podz.util.ItemOffsetDecorationGenre;
 import mirror.co.larry.podz.util.NetworkUtil;
+import mirror.co.larry.podz.util.OnVisibleListener;
 import mirror.co.larry.podz.util.PodcastLoader;
 import mirror.co.larry.podz.util.UiUtil;
 import mirror.co.larry.podz.adapter.EpisodeAdapter;
@@ -56,7 +61,8 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
     private ProgressDialog progressDialog;
     private String podcastId, podcastTitle, thumbnail, country, podcastDescription, website, listennoteUrl, publisher;
     private PodcastViewModel viewModel;
-
+    private OnVisibleListener mListener;
+    String id = "";
 
     public PodcastDetailFragment() {
         // Required empty public constructor
@@ -66,7 +72,16 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("lifecycle : ", "Detail onCreate");
-
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle(getActivity().getString(R.string.loading_title));
+        if(getArguments().containsKey(PODCAST_ID)){
+            id = getArguments().getString(PODCAST_ID);
+        }
+        if(savedInstanceState!=null){
+            if(savedInstanceState.containsKey("podcast_name")){
+                podcastTitle = savedInstanceState.getString("podcast_name");
+            }
+        }
     }
 
     @Override
@@ -78,27 +93,36 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
         View view = binding.getRoot();
         ((AppCompatActivity)getActivity()).setSupportActionBar(binding.toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setTitle(getActivity().getString(R.string.loading_title));
-        String id = "";
+
         episodeList = new ArrayList<>();
         genresList = new ArrayList<>();
 
-        if(getArguments().containsKey(PODCAST_ID)){
-            id = getArguments().getString(PODCAST_ID);
-        }
+        Bundle urlBundle = new Bundle();
+        urlBundle.putString("url_string", NetworkUtil.buildPodcastDetailUrl(id));
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(podcastTitle!=null?podcastTitle:"");
+
         // check the internet connection
         if(NetworkUtil.isOnline(getActivity())){
-            Bundle urlBundle = new Bundle();
-            urlBundle.putString("url_string", NetworkUtil.buildPodcastDetailUrl(id));
-            if(getActivity().getSupportLoaderManager().getLoader(1)!=null){
+            if(savedInstanceState==null){
                 getActivity().getSupportLoaderManager().restartLoader(1 ,urlBundle, this);
+            }else{
+                getActivity().getSupportLoaderManager().initLoader(1, urlBundle, this);
             }
-            getActivity().getSupportLoaderManager().initLoader(1, urlBundle, this);
         }else{
             Snackbar.make(binding.getRoot(), getString(R.string.check_network_msg), Snackbar.LENGTH_LONG).show();
         }
 
+        // share button on click
+        binding.podcastDetailContent.btShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, listennoteUrl);
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+            }
+        });
 
         return view;
     }
@@ -115,6 +139,7 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
                Snackbar.make(binding.podcastDetailMainLayout, getString(R.string.add_fav_msg) , Snackbar.LENGTH_SHORT).show();
            }
        });
+       mListener.showBottomNav(false);
     }
 
     @Override
@@ -126,6 +151,12 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
                 .replace(R.id.content_container, fragment, EpisodeDetailFragment.TAG)
                 .addToBackStack(TAG)
                 .commit();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("podcast_name", podcastTitle);
     }
 
     @NonNull
@@ -150,7 +181,8 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
                 website = jsonObject.getString("website");
                 listennoteUrl = jsonObject.getString("listennotes_url");
                 publisher = jsonObject.getString("publisher");
-
+                // set toolbar title
+                binding.toolbar.setTitle(podcastTitle);
                 JSONArray genres = jsonObject.getJSONArray("genres");
                 JSONArray episodes = jsonObject.getJSONArray("episodes");
                 for(int i=0 ;i<genres.length();i++){
@@ -172,7 +204,6 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
                 }
 
                 // fill the view with data
-
                 Glide.with(getActivity())
                         .asBitmap()
                         .load(thumbnail)
@@ -240,43 +271,12 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
 
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("lifecycle : ", "Detail onResume");
-        if(getUserVisibleHint()){
-
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d("lifecycle : ", "Detail onStop");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("lifecycle : ", "Detail onStop");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d("lifecycle : ", "Detail onDestroy");
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d("lifecycle : ", "Detail onDestroyView");
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if(mListener == null){
+            mListener = (OnVisibleListener)context;
+        }
         Log.d("lifecycle : ", "Detail onAttach");
     }
 }

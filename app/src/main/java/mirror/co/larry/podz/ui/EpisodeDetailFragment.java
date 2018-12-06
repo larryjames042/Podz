@@ -2,7 +2,9 @@ package mirror.co.larry.podz.ui;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,13 +13,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.util.HelperUtil;
 import mirror.co.larry.podz.databinding.FragmentEpisodeDetailBinding;
+import mirror.co.larry.podz.util.OnVisibleListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,11 +36,11 @@ public class EpisodeDetailFragment extends Fragment {
     public static final String KEY_LISTEN_NOTE_URL = "listenNoteUrl";
     public static final String KEY_PODCAST_NAME = "podcastName";
 
-    String id, title, audio, description, thumbnail, listenNoteUrl, pubDate, podcastName;
-    int audioLength;
-    FragmentEpisodeDetailBinding binding;
-
-    OnButtonPlayListener mListener;
+    private String id, title, audio, description, thumbnail, listenNoteUrl, pubDate, podcastName;
+    private int audioLength;
+    private FragmentEpisodeDetailBinding binding;
+    private OnVisibleListener mVisibleListener;
+    private OnButtonPlayListener mListener;
 
     public EpisodeDetailFragment() {
         // Required empty public constructor
@@ -88,7 +90,29 @@ public class EpisodeDetailFragment extends Fragment {
                 mListener.onPlayButtonClick(audio, HelperUtil.convertSecToHr(audioLength), title);
             }
         });
+        mVisibleListener.showBottomNav(false);
 
+        // share episode
+        binding.btShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, listenNoteUrl);
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+            }
+        });
+        // link
+        binding.btLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(listenNoteUrl);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+        
         return v;
     }
 
@@ -105,6 +129,9 @@ public class EpisodeDetailFragment extends Fragment {
         super.onAttach(context);
         if(mListener == null){
             mListener = (OnButtonPlayListener) context;
+        }
+        if(mVisibleListener == null){
+            mVisibleListener = (OnVisibleListener) context;
         }
     }
 

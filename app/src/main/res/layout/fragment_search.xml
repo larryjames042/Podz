@@ -9,12 +9,21 @@
         android:layout_height="match_parent"
         tools:context=".ui.SearchFragment">
 
-        <android.support.v7.widget.SearchView
+        <FrameLayout
+            android:background="@color/colorPrimary"
             android:elevation="@dimen/searchview_elevation"
-            android:id="@+id/search_view"
-            app:queryHint="@string/search_hint"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="@dimen/searchview_padding"
+            >
+            <android.support.v7.widget.SearchView
+                android:id="@+id/search_view"
+                android:background="@color/white"
+                app:queryHint="@string/search_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_search_result"

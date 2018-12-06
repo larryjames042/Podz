@@ -14,15 +14,14 @@ import java.util.List;
 
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.databinding.PodcastListItemBinding;
-import mirror.co.larry.podz.model.Podcast;
 
 public class FavouritePodcastAdapter extends RecyclerView.Adapter<FavouritePodcastAdapter.PodcastViewHolder> {
     List<mirror.co.larry.room.Podcast> podcastList;
     Context mContext;
     LayoutInflater layoutInflater;
-    OnPodcastClickListener mListener;
+    OnFavPodcastClickListener mListener;
 
-    public FavouritePodcastAdapter(Context context, OnPodcastClickListener listener){
+    public FavouritePodcastAdapter(Context context, OnFavPodcastClickListener listener){
         mContext = context;
         mListener = listener;
     }
@@ -74,13 +73,13 @@ public class FavouritePodcastAdapter extends RecyclerView.Adapter<FavouritePodca
             binding.podcastListItemContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mListener.podcastItemClickListener(v, podcast.getId());
+                    mListener.favPodcastItemClickListener(v, podcast.getId());
                 }
             });
         }
     }
 
-    public interface OnPodcastClickListener {
-        void podcastItemClickListener(View view, String id);
+    public interface OnFavPodcastClickListener {
+        void favPodcastItemClickListener(View view, String id);
     }
 }
