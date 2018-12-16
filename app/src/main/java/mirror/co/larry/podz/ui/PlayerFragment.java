@@ -9,10 +9,13 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
@@ -20,6 +23,7 @@ import com.google.android.gms.ads.MobileAds;
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.databinding.FragmentPlayerBinding;
 import mirror.co.larry.podz.services.MusicService;
+import mirror.co.larry.podz.util.UiUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +34,8 @@ public class PlayerFragment extends Fragment {
     private MusicService musicService;
     private  boolean musicBound = false;
     private SimpleExoPlayer player;
+    OnPlayerViewVisibleListener mListener;
+
 
     public PlayerFragment() {
         // Required empty public constructor
@@ -43,7 +49,6 @@ public class PlayerFragment extends Fragment {
         View view = binding.getRoot();
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
         binding.adView.loadAd(adRequest);
-
         return view;
     }
 
@@ -57,7 +62,13 @@ public class PlayerFragment extends Fragment {
             // pass list
             musicBound = true;
             player = binder.getExoplayerInstance();
-            binding.playerControlView.setPlayer(player);
+            binding.mainPlayerView.setPlayer(player);
+            binding.tvPlayerEpisodeName.setText(musicService.episodeName);
+
+            Glide.with(getActivity())
+                    .asBitmap()
+                    .load(musicService.thumbnail)
+                    .into(UiUtil.getRoundedImageTarget(getActivity(), binding.imgPlayerEpisodeImage, 14));
         }
 
         @Override
@@ -65,6 +76,7 @@ public class PlayerFragment extends Fragment {
             musicBound = false;
         }
     };
+
 
     @Override
     public void onStart() {
@@ -76,9 +88,29 @@ public class PlayerFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(mListener==null){
+            mListener = (OnPlayerViewVisibleListener) context;
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(!isVisibleToUser){
+            mListener.onVisible(false);
+        }
+        Log.d("playerview", "sssss");
+    }
+
+    @Override
     public void onDestroy() {
-//        getActivity().stopService(playIntent);
-//        musicService = null;
         super.onDestroy();
     }
+
+    public interface OnPlayerViewVisibleListener{
+        void onVisible(boolean isVisible);
+    }
+
 }

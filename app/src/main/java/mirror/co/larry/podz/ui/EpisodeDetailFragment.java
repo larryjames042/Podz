@@ -87,7 +87,7 @@ public class EpisodeDetailFragment extends Fragment {
         binding.btPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onPlayButtonClick(audio, HelperUtil.convertSecToHr(audioLength), title);
+                mListener.onPlayButtonClick(audio, thumbnail, title);
             }
         });
         mVisibleListener.showBottomNav(false);
@@ -112,7 +112,7 @@ public class EpisodeDetailFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        
+
         return v;
     }
 
@@ -136,6 +136,6 @@ public class EpisodeDetailFragment extends Fragment {
     }
 
     interface OnButtonPlayListener{
-        void onPlayButtonClick(String audioUrl, String audioDuration, String episodeName);
+        void onPlayButtonClick(String audioUrl, String thumbnail, String episodeName);
     }
 }

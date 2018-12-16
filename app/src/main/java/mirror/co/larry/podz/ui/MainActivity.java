@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
@@ -13,10 +14,12 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 
 import java.io.Serializable;
@@ -32,7 +35,8 @@ public class MainActivity extends AppCompatActivity implements
         EpisodeDetailFragment.OnButtonPlayListener,
         PodcastAdapter.OnPodcastClickListener,
         OnVisibleListener,
-        FavouritePodcastAdapter.OnFavPodcastClickListener {
+        FavouritePodcastAdapter.OnFavPodcastClickListener,
+        PlayerFragment.OnPlayerViewVisibleListener {
     private ActivityMainBinding binding;
     private MusicService musicService;
     private  boolean musicBound = false;
@@ -48,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements
         if(savedInstanceState==null){
             loadFragment(new DiscoverFragment());
         }
+
 //        else{
 //            int index = getSupportFragmentManager().getBackStackEntryCount();
 //            FragmentManager.BackStackEntry backEntry = getSupportFragmentManager().getBackStackEntryAt(index);
@@ -55,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements
 //            Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
 //            loadFragment(fragment);
 //        }
-
 
        binding.bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         binding.playerSmallViewContainer.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements
                             .addToBackStack(null)
                             .commit();
                 }
-
             }
         });
     }
@@ -119,6 +122,10 @@ public class MainActivity extends AppCompatActivity implements
             musicBound = true;
             exoPlayer = binder.getExoplayerInstance();
             binding.playerView.setPlayer(exoPlayer);
+            if( exoPlayer.getPlayWhenReady()&& exoPlayer.getPlaybackState()== Player.STATE_READY){
+                binding.playerSmallViewContainer.setVisibility(View.VISIBLE);
+                binding.tvEpisodeName.setText(musicService.episodeName);
+            }
         }
 
         @Override
@@ -129,30 +136,31 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onStart() {
-        super.onStart();
+        // bind service
         if(playIntent == null){
             playIntent = new Intent(this, MusicService.class);
             bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
+            startService(playIntent);
         }
+        super.onStart();
     }
 
     @Override
     protected void onDestroy() {
-        stopService(playIntent);
-        musicService = null;
+//        if(playIntent!=null){
+//            stopService(playIntent);
+//            musicService = null;
+//        }
+        Log.d("MainServiceActivity: ", "Destroy");
         super.onDestroy();
     }
 
     @Override
-    public void onPlayButtonClick(String audioUrl, String audioDuration, String episodeName) {
+    public void onPlayButtonClick(String audioUrl, String thumbnail, String episodeName) {
         binding.playerSmallViewContainer.setVisibility(View.VISIBLE);
         binding.tvEpisodeName.setText(episodeName);
         binding.tvEpisodeName.setSelected(true);
-        if(musicService.isPlaying()){
-            musicService.pausePlayer();
-        }else{
-            musicService.playPodcast(audioUrl, episodeName);
-        }
+        musicService.playPodcast(audioUrl, episodeName, thumbnail);
     }
 
     @Override
@@ -192,5 +200,10 @@ public class MainActivity extends AppCompatActivity implements
         return;
     }
 
-
+    @Override
+    public void onVisible(boolean isVisible) {
+        if(isVisible==false){
+            binding.playerSmallViewContainer.setVisibility(View.VISIBLE);
+        }
+    }
 }

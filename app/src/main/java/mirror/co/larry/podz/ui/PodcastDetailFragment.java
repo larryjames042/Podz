@@ -123,7 +123,6 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
                 startActivity(sendIntent);
             }
         });
-
         return view;
     }
 

@@ -1,8 +1,11 @@
 package mirror.co.larry.podz.model;
 
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-public class Podcast {
+import java.io.Serializable;
+
+public class Podcast implements Serializable {
     private String id;
     private String title;
     private String description;

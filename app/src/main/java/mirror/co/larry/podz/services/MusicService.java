@@ -1,15 +1,21 @@
 package mirror.co.larry.podz.services;
 
+import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Player;
@@ -20,20 +26,59 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import mirror.co.larry.podz.PodzWidget;
 import mirror.co.larry.podz.ui.MainActivity;
 import mirror.co.larry.podz.R;
 
 public class MusicService extends Service implements Player.EventListener {
     private static final String CHANNEL_ID = "channel_id";
+    private static final String ACTION_PLAY = "action_play";
+    private static final String ACTION_PAUSE = "action_pause";
+    private static final String ACTION_STOP = "action_stop";
+    public static final String ACTION_PLAY_FROM_WIDGET = "action_widget";
     private static final int NOTIFY_ID = 1;
     private SimpleExoPlayer exoPlayer;
     private  final IBinder musicBind = new MusicBinder();
     private boolean isPlaying = false;
+    public String audioUrl, thumbnail, episodeName;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if(intent != null)
+        {
+            String action;
+            if(intent.getAction() !=null){
+                action  = intent.getAction();
+                switch (action)
+                {
+                    case ACTION_STOP:
+                        stopForegroundService();
+                        Toast.makeText(this, "Foreground service is stopped.", Toast.LENGTH_LONG).show();
+                        break;
+                    case ACTION_PLAY:
+                        if(exoPlayer!=null) exoPlayer.setPlayWhenReady(true);
+                        Toast.makeText(this, "Play", Toast.LENGTH_LONG).show();
+                        break;
+                    case ACTION_PAUSE:
+                        if(exoPlayer!=null) exoPlayer.setPlayWhenReady(false);
+                        Toast.makeText(this, "Pause", Toast.LENGTH_LONG).show();
+                        break;
+                    case ACTION_PLAY_FROM_WIDGET:
+                        Toast.makeText(this, "start service", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -43,17 +88,16 @@ public class MusicService extends Service implements Player.EventListener {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        if (exoPlayer!=null) {
-            exoPlayer.release();
-            exoPlayer = null;
-        }
+//        if (exoPlayer!=null) {
+//            exoPlayer.release();
+//            exoPlayer = null;
+//        }
         return false;
     }
 
-
     @Override
     public void onDestroy() {
-        stopForeground(true);
+//        stopForeground(true);
     }
 
     public class MusicBinder extends Binder {
@@ -71,7 +115,7 @@ public class MusicService extends Service implements Player.EventListener {
         }
     }
 
-    private  void initializePlayer(String audioUri){
+    private  void initializePlayer(String audioUri,String episodeName,String thumbnail){
         Uri uri  = Uri.parse(audioUri);
         if(exoPlayer == null){
             exoPlayer = ExoPlayerFactory.newSimpleInstance(this);
@@ -87,10 +131,34 @@ public class MusicService extends Service implements Player.EventListener {
         exoPlayer.prepare(videoSource);
     }
 
-    public void playPodcast(String audioUri, String episodeName){
-        initializePlayer(audioUri);
-        exoPlayer.setPlayWhenReady(true);
-        buildNotification(episodeName);
+    public void playPodcast(String audioUrl, String episodeName, String thumbnail){
+        if(this.audioUrl==null && this.episodeName==null && this.thumbnail==null){
+            this.audioUrl = audioUrl;
+            this.thumbnail = thumbnail;
+            this.episodeName = episodeName;
+            initializePlayer(audioUrl, episodeName, thumbnail );
+            exoPlayer.setPlayWhenReady(true);
+            buildNotification(episodeName);
+        }else{
+            if(this.audioUrl.equals(audioUrl)){
+                if(isPlaying){
+                    exoPlayer.setPlayWhenReady(false);
+                }else{
+                    exoPlayer.setPlayWhenReady(true);
+                }
+            }else{
+                initializePlayer(audioUrl, episodeName, thumbnail );
+                exoPlayer.setPlayWhenReady(true);
+                buildNotification(episodeName);
+            }
+        }
+
+        // update widget when podcast is played
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, PodzWidget.class));
+        // update all widgets
+        PodzWidget.updateLastPlayedEpisode(this, appWidgetManager,episodeName, appWidgetIds);
+
     }
 
     public boolean isPlaying(){
@@ -104,13 +172,28 @@ public class MusicService extends Service implements Player.EventListener {
     }
 
     private void buildNotification(String episodeName){
+        // setup intent to launch Activity
         Intent notIntent = new Intent(this, MainActivity.class);
-        notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        notIntent.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
         PendingIntent pendInt = PendingIntent.getActivity(this, 0,
-                notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                notIntent, 0);
 
-        Notification.Builder builder;
+        // set up intent to play podcast
+        Intent playIntent = new Intent(this, MusicService.class);
+        playIntent.setAction(ACTION_PLAY);
+        PendingIntent playPendIntent = PendingIntent.getService(this, 0, playIntent,0);
 
+        // set up intent to pause podcast
+        Intent pauseIntent = new Intent(this, MusicService.class);
+        pauseIntent.setAction(ACTION_PAUSE);
+        PendingIntent pausePendIntent = PendingIntent.getService(this, 0, pauseIntent,0);
+
+        // set up intent to pause podcast
+        Intent closeIntent = new Intent(this, MusicService.class);
+        closeIntent.setAction(ACTION_STOP);
+        PendingIntent stopPendIntent = PendingIntent.getService(this, 0, closeIntent,0);
+
+        NotificationCompat.Builder builder;
         NotificationManager mNotificationManager = (NotificationManager)getSystemService(MusicService.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
@@ -118,18 +201,23 @@ public class MusicService extends Service implements Player.EventListener {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
             mNotificationManager.createNotificationChannel(channel);
-            builder = new Notification.Builder(this, CHANNEL_ID);
+            builder = new NotificationCompat.Builder(this, CHANNEL_ID);
         }else{
-            builder = new Notification.Builder(this);
+            builder = new NotificationCompat.Builder(this);
         }
+        NotificationCompat.Action stopAction = new NotificationCompat.Action(R.drawable.ic_stop_black, getString(R.string.stop), stopPendIntent);
+        NotificationCompat.Action pauseAction = new NotificationCompat.Action(R.drawable.ic_pause, getString(R.string.pause), pausePendIntent);
+        NotificationCompat.Action playAction = new NotificationCompat.Action(R.drawable.ic_play, getString(R.string.play), playPendIntent);
+        // notification builder
         builder.setContentIntent(pendInt)
                 .setSmallIcon(R.drawable.ic_play)
                 .setTicker(episodeName)
+                .setPriority(Notification.PRIORITY_MAX)
                 .setOngoing(true)
+                .addAction(pauseAction)
+                .addAction(playAction)
+                .addAction(stopAction)
                 .setContentTitle(getString(R.string.playing))
                 .setContentText(episodeName);
 
@@ -139,10 +227,20 @@ public class MusicService extends Service implements Player.EventListener {
             builder.setColor(getResources().getColor(R.color.colorPrimary));
         }
 
-
         Notification not = builder.build();
-
         startForeground(NOTIFY_ID, not);
+    }
+
+    private void stopForegroundService()
+    {
+        if (exoPlayer!=null) {
+            exoPlayer.release();
+            exoPlayer = null;
+        }
+        // Stop foreground service and remove the notification.
+        stopForeground(true);
+        // Stop the foreground service.
+        stopSelf();
     }
 
     @Override

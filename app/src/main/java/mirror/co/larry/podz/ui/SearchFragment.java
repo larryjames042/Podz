@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -44,13 +46,17 @@ import mirror.co.larry.podz.databinding.FragmentSearchBinding;
  */
 public class SearchFragment extends Fragment implements LoaderManager.LoaderCallbacks<String> {
     private static final String TAG = SearchFragment.class.getSimpleName();
+    private static final String LIST_KEY = "list_key";
+    private static final String LAYOUT_STATE_KEY = "layout_state_key";
     private FragmentSearchBinding binding;
     private String mQueryText;
     private ProgressDialog progressDialog;
-    private List<Podcast> podcastList;
+    private ArrayList<Podcast> podcastList;
+    private ArrayList<Podcast> podcastListTemp;
     private PodcastAdapter searchResultAdapter;
     private OnVisibleListener mListener;
     Tracker mTracker;
+    LinearLayoutManager layoutManager;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -63,13 +69,11 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication)getActivity().getApplication();
         mTracker = application.getDefaultTracker();
-        Log.d("searchfragment : ", "onCreate");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("searchfragment : ", "onResume");
         Log.i(TAG, "SearchFragmentScreen ");
         mTracker.setScreenName(TAG );
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
@@ -82,12 +86,27 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false);
         View v = binding.getRoot();
         podcastList = new ArrayList<>();
-
+        podcastListTemp = new ArrayList<>();
         ItemOffsetDecoration decoration = new ItemOffsetDecoration(getActivity(), R.dimen.recyclerview_item_offset);
         binding.rvSearchResult.addItemDecoration(decoration);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);
         binding.rvSearchResult.setHasFixedSize(true);
         binding.rvSearchResult.setLayoutManager(layoutManager);
+
+        if(mQueryText!=null){
+            binding.searchView.clearFocus();
+            // check the connection first
+            if(NetworkUtil.isOnline(getActivity())){
+                Bundle urlBundle = new Bundle();
+                urlBundle.putString("url_string", NetworkUtil.buildPodcastQueryUrl(mQueryText));
+                if(getActivity().getSupportLoaderManager().getLoader(2)!=null){
+                    getActivity().getSupportLoaderManager().restartLoader(2 ,urlBundle, SearchFragment.this);
+                }
+                getActivity().getSupportLoaderManager().initLoader(2, urlBundle, SearchFragment.this);
+            }else{
+                Snackbar.make(binding.getRoot(), getString(R.string.check_network_msg), Snackbar.LENGTH_LONG).show();
+            }
+        }
 
         binding.searchView.setActivated(true);
         binding.searchView.onActionViewExpanded();
@@ -120,7 +139,6 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
             }
         });
         mListener.showBottomNav(true);
-        Log.d("searchfragment : ", "onCreateView");
         return v;
     }
 
@@ -135,21 +153,30 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d("searchfragment : ", "onSave");
-    }
-
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("searchfragment : ", "onStop");
+        // save recyclerview list and position
+        outState.putSerializable(LIST_KEY, podcastListTemp);
+        if(podcastListTemp.size()==0){
+            Toast.makeText(getContext(), "no list", Toast.LENGTH_SHORT).show();
+        }
+        outState.putParcelable(LAYOUT_STATE_KEY, layoutManager.onSaveInstanceState());
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d("searchfragment : ", "onDestroy");
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState!=null){
+            if(savedInstanceState.containsKey(LAYOUT_STATE_KEY)){
+                Parcelable state = savedInstanceState.getParcelable(LAYOUT_STATE_KEY);
+                layoutManager.onRestoreInstanceState(state);
+            }
+            if(savedInstanceState.containsKey(LIST_KEY)){
+
+                ArrayList<Podcast> podList = (ArrayList<Podcast>) savedInstanceState.getSerializable(LIST_KEY);
+                searchResultAdapter = new PodcastAdapter(getActivity(), podList, (PodcastAdapter.OnPodcastClickListener) getActivity());
+                binding.rvSearchResult.setAdapter(searchResultAdapter);
+                podcastListTemp = podList;
+            }
+        }
     }
 
     @NonNull
@@ -178,6 +205,7 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                     String publisher = podcast.getString("publisher_original");
                     podcastList.add(new Podcast(id,title,description,publisher,thumbnail));
                 }
+                podcastListTemp = podcastList;
                 searchResultAdapter = new PodcastAdapter(getActivity(), podcastList, (PodcastAdapter.OnPodcastClickListener) getActivity());
                 binding.rvSearchResult.setAdapter(searchResultAdapter);
 

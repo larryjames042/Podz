@@ -27,6 +27,8 @@
     <string name="tab_best">Best</string>
     <string name="tab_self_help">Self-Help</string>
     <string name="tab_news_politic">News</string>
+
+
     <string name="search_hint">Search for podcast</string>
     <string name="play_button">podcast play button</string>
     <string name="podcast_favourite_button">Add to favourite Button</string>
@@ -43,5 +45,8 @@
     <string name="ad_app_id">ca-app-pub-3172187836765919~8398145871</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
-
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="stop">Stop</string>
+    <string name="episode_name_image_description">Episode Thumbnail</string>
 </resources>
