@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements
                     PlayerFragment playerFragment = new PlayerFragment();
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .add(R.id.content_container, playerFragment)
+                            .replace(R.id.content_container, playerFragment)
                             .addToBackStack(null)
                             .commit();
                 }

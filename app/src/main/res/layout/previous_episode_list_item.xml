@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <android.support.constraint.ConstraintLayout
+            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -18,7 +19,9 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="This is Episode Name" />
+                tools:text="This is Episode Name"
+                android:nextFocusDown="@id/publish_date"
+                android:nextFocusForward="@id/publish_date"/>
 
             <TextView
                 android:id="@+id/publish_date"
@@ -29,20 +32,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/episode_name"
                 app:layout_constraintTop_toBottomOf="@+id/episode_name"
-                tools:text="15 Oct 2018" />
+                tools:text="15 Oct 2018"
+                android:nextFocusUp="@id/episode_name"/>
 
-            <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:src="@drawable/ic_play"
-                android:background="@color/transparent"
-                app:layout_constraintBottom_toBottomOf="@+id/publish_date"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/episode_name" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 

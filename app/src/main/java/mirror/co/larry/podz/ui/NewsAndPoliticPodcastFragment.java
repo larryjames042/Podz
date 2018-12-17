@@ -66,6 +66,7 @@ public class NewsAndPoliticPodcastFragment extends Fragment implements LoaderMan
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);
         binding.rvNewsPoliticPodcast.setHasFixedSize(true);
         binding.rvNewsPoliticPodcast.setLayoutManager(layoutManager);
+        binding.rvNewsPoliticPodcast.setFocusable(true);
         ItemOffsetDecoration decoration = new ItemOffsetDecoration(getActivity(), R.dimen.recyclerview_item_offset);
         binding.rvNewsPoliticPodcast.addItemDecoration(decoration);
 

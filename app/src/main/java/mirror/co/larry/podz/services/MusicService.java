@@ -35,7 +35,6 @@ public class MusicService extends Service implements Player.EventListener {
     private static final String ACTION_PLAY = "action_play";
     private static final String ACTION_PAUSE = "action_pause";
     private static final String ACTION_STOP = "action_stop";
-    public static final String ACTION_PLAY_FROM_WIDGET = "action_widget";
     private static final int NOTIFY_ID = 1;
     private SimpleExoPlayer exoPlayer;
     private  final IBinder musicBind = new MusicBinder();
@@ -68,9 +67,6 @@ public class MusicService extends Service implements Player.EventListener {
                     case ACTION_PAUSE:
                         if(exoPlayer!=null) exoPlayer.setPlayWhenReady(false);
                         Toast.makeText(this, "Pause", Toast.LENGTH_LONG).show();
-                        break;
-                    case ACTION_PLAY_FROM_WIDGET:
-                        Toast.makeText(this, "start service", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;

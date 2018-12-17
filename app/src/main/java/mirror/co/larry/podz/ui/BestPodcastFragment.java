@@ -107,6 +107,7 @@ public class BestPodcastFragment extends Fragment implements LoaderManager.Loade
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);
         binding.rvBestPodcast.setHasFixedSize(true);
         binding.rvBestPodcast.setLayoutManager(layoutManager);
+        binding.rvBestPodcast.setFocusable(true);
         ItemOffsetDecoration decoration = new ItemOffsetDecoration(getActivity(), R.dimen.recyclerview_item_offset);
         binding.rvBestPodcast.addItemDecoration(decoration);
 

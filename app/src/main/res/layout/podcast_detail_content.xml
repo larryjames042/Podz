@@ -8,11 +8,12 @@
         android:layout_height="wrap_content">
 
         <android.support.constraint.ConstraintLayout
+            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/bt_subscribe"
+                android:id="@+id/bt_website"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -22,7 +23,10 @@
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/bt_share"
-                android:text="@string/subscription" />
+                android:nextFocusForward="@id/bt_share"
+                android:nextFocusRight="@id/bt_share"
+                android:nextFocusDown="@id/label_abt_podcast"
+                android:text="@string/website" />
 
             <Button
                 android:id="@+id/bt_share"
@@ -32,8 +36,12 @@
                 android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toStartOf="@+id/bt_favourite"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/bt_subscribe"
+                app:layout_constraintStart_toEndOf="@+id/bt_website"
                 app:layout_constraintTop_toTopOf="parent"
+                android:nextFocusForward="@id/bt_favourite"
+                android:nextFocusRight="@id/bt_favourite"
+                android:nextFocusLeft="@id/bt_website"
+                android:nextFocusDown="@id/label_abt_podcast"
                 android:text="@string/share" />
 
             <Button
@@ -45,13 +53,17 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/bt_share"
                 app:layout_constraintTop_toTopOf="@+id/bt_share"
-                android:text="@string/favourite" />
+                android:text="@string/favourite"
+                android:nextFocusForward="@id/label_abt_podcast"
+                android:nextFocusLeft="@id/bt_share"
+                android:nextFocusDown="@id/label_abt_podcast"/>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:focusable="true"
                 android:background="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,6 +80,9 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:nextFocusForward="@id/podcast_description"
+                    android:nextFocusUp="@id/bt_favourite"
+                    android:nextFocusDown="@id/podcast_description"
                     tools:text="@string/about_podcast" />
 
                 <TextView
@@ -81,9 +96,16 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/label_abt_podcast"
                     style="@style/content_text_style"
+                    android:nextFocusForward="@id/rv_podcast_genre"
+                    android:nextFocusUp="@id/label_abt_podcast"
+                    android:nextFocusDown="@id/rv_podcast_genre"
                     tools:text="@string/test_content" />
 
                 <android.support.v7.widget.RecyclerView
+                    android:focusable="true"
+                    android:nextFocusForward="@id/latest_episode"
+                    android:nextFocusDown="@id/latest_episode"
+                    android:nextFocusUp="@id/podcast_description"
                     android:id="@+id/rv_podcast_genre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -106,6 +128,9 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                android:nextFocusUp="@id/rv_podcast_genre"
+                android:nextFocusDown="@id/episode_item"
+                android:nextFocusForward="@id/episode_item"
                 tools:text="@string/latest_episode" />
 
             <android.support.v7.widget.CardView

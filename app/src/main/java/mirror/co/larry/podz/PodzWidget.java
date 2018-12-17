@@ -22,14 +22,10 @@ public class PodzWidget extends AppWidgetProvider {
         Intent intent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        Intent playIntent = new Intent(context, MusicService.class);
-        playIntent.setAction(MusicService.ACTION_PLAY_FROM_WIDGET);
-        PendingIntent playPendingIntent = PendingIntent.getService(context, 1, playIntent, 0);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.podz_widget);
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
         views.setTextViewText(R.id.appwidget_text, episodeName);
-        views.setOnClickPendingIntent(R.id.iv_play_button, playPendingIntent);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

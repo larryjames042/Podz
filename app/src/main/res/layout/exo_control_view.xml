@@ -53,6 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:background="@color/transparent"
+            android:minWidth="@dimen/button_min_width"
             android:src="@drawable/ic_play"
             />
 
@@ -60,6 +61,7 @@
             android:id="@id/exo_pause"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:minWidth="@dimen/button_min_width"
             android:background="@color/transparent"
             android:src="@drawable/ic_pause" />
     </LinearLayout>

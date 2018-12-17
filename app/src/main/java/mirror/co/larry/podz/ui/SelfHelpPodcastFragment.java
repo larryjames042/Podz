@@ -66,6 +66,7 @@ public class SelfHelpPodcastFragment extends Fragment implements LoaderManager.L
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false);
         binding.rvSelfHelpPodcast.setHasFixedSize(true);
         binding.rvSelfHelpPodcast.setLayoutManager(layoutManager);
+        binding.rvSelfHelpPodcast.setFocusable(true);
         ItemOffsetDecoration decoration = new ItemOffsetDecoration(getActivity(), R.dimen.recyclerview_item_offset);
         binding.rvSelfHelpPodcast.addItemDecoration(decoration);
 

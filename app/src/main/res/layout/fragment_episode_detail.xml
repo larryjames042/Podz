@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.constraint.ConstraintLayout
+            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -31,6 +32,7 @@
                 app:layout_constraintTop_toBottomOf="@id/toolbar_container">
 
                 <android.support.constraint.ConstraintLayout
+                    android:focusable="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -47,7 +49,9 @@
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/episode_thumbnail"
-                        tools:text="@string/test_podcast_name" />
+                        tools:text="@string/test_podcast_name"
+                        android:nextFocusDown="@id/episode_name"
+                        android:nextFocusForward="@id/episode_name"/>
 
                     <TextView
                         android:id="@+id/episode_name"
@@ -60,7 +64,9 @@
                         app:layout_constraintEnd_toStartOf="@+id/episode_thumbnail"
                         app:layout_constraintStart_toStartOf="@+id/podcast_name"
                         app:layout_constraintTop_toBottomOf="@+id/podcast_name"
-                        tools:text="@string/test_episode_name" />
+                        tools:text="@string/test_episode_name"
+                        android:nextFocusUp="@id/podcast_name"
+                        android:nextFocusForward="@id/episode_upload_date"/>
 
                     <TextView
                         android:id="@+id/episode_upload_date"
@@ -70,7 +76,10 @@
                         android:textSize="12sp"
                         app:layout_constraintStart_toStartOf="@+id/episode_name"
                         app:layout_constraintTop_toBottomOf="@+id/episode_name"
-                        tools:text="@string/test_upload_date" />
+                        tools:text="@string/test_upload_date"
+                        android:nextFocusUp="@id/episode_name"
+                        android:nextFocusDown="@id/bt_play"
+                        android:nextFocusForward="@id/bt_play"/>
 
                     <ImageButton
                         android:id="@+id/bt_play"
@@ -80,9 +89,14 @@
                         android:layout_marginBottom="8dp"
                         android:background="@color/transparent"
                         android:src="@drawable/ic_play"
+                        android:contentDescription="@string/play_button"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/episode_upload_date"
-                        app:layout_constraintTop_toBottomOf="@+id/episode_upload_date" />
+                        app:layout_constraintTop_toBottomOf="@+id/episode_upload_date"
+                        android:nextFocusUp="@id/episode_upload_date"
+                        android:nextFocusDown="@id/episode_des_label"
+                        android:nextFocusRight="@id/episode_duration"
+                        android:nextFocusForward="@id/episode_duration"/>
 
                     <TextView
                         android:id="@+id/episode_duration"
@@ -92,7 +106,13 @@
                         app:layout_constraintBottom_toBottomOf="@+id/bt_play"
                         app:layout_constraintStart_toEndOf="@+id/bt_play"
                         app:layout_constraintTop_toTopOf="@+id/bt_play"
-                        tools:text="@string/test_duration" />
+                        tools:text="@string/test_duration"
+                        android:nextFocusDown="@id/episode_des_label"
+                        android:nextFocusUp="@id/episode_upload_date"
+                        android:nextFocusRight="@id/bt_share"
+                        android:nextFocusForward="@id/bt_share"
+                        android:nextFocusLeft="@id/episode_duration"
+                        />
 
                     <ImageButton
                         android:id="@+id/bt_share"
@@ -102,7 +122,13 @@
                         android:background="@color/transparent"
                         app:layout_constraintStart_toEndOf="@+id/episode_duration"
                         app:layout_constraintTop_toTopOf="@+id/bt_play"
-                        android:src="@drawable/ic_share_black" />
+                        android:src="@drawable/ic_share_black"
+                        android:contentDescription="@string/share_button"
+                        android:nextFocusUp="@id/episode_upload_date"
+                        android:nextFocusRight="@id/episode_share"
+                        android:nextFocusForward="@id/episode_share"
+                        android:nextFocusDown="@id/episode_des_label"
+                        android:nextFocusLeft="@id/episode_duration"/>
 
                     <TextView
                         android:id="@+id/episode_share"
@@ -111,7 +137,12 @@
                         android:layout_marginStart="8dp"
                         app:layout_constraintStart_toEndOf="@+id/bt_share"
                         app:layout_constraintTop_toTopOf="@+id/episode_duration"
-                        android:text="@string/share" />
+                        android:text="@string/share"
+                        android:nextFocusUp="@id/episode_upload_date"
+                        android:nextFocusRight="@id/bt_fav"
+                        android:nextFocusForward="@id/bt_fav"
+                        android:nextFocusDown="@id/episode_des_label"
+                        android:nextFocusLeft="@id/bt_share"/>
 
                     <ImageButton
                         android:id="@+id/bt_fav"
@@ -121,7 +152,13 @@
                         android:background="@color/transparent"
                         app:layout_constraintStart_toEndOf="@+id/episode_share"
                         app:layout_constraintTop_toTopOf="@+id/bt_share"
-                        android:src="@drawable/ic_favorite_black" />
+                        android:src="@drawable/ic_favorite_black"
+                        android:contentDescription="@string/episode_fav_button"
+                        android:nextFocusUp="@id/episode_upload_date"
+                        android:nextFocusRight="@id/episode_fav"
+                        android:nextFocusForward="@id/episode_fav"
+                        android:nextFocusDown="@id/episode_des_label"
+                        android:nextFocusLeft="@id/episode_share"/>
 
                     <TextView
                         android:id="@+id/episode_fav"
@@ -130,7 +167,12 @@
                         android:layout_marginStart="8dp"
                         app:layout_constraintStart_toEndOf="@+id/bt_fav"
                         app:layout_constraintTop_toTopOf="@+id/episode_share"
-                        android:text="@string/favourite" />
+                        android:text="@string/favourite"
+                        android:nextFocusUp="@id/episode_upload_date"
+                        android:nextFocusRight="@id/bt_link"
+                        android:nextFocusForward="@id/bt_link"
+                        android:nextFocusDown="@id/episode_des_label"
+                        android:nextFocusLeft="@id/bt_fav"/>
 
                     <ImageButton
                         android:id="@+id/bt_link"
@@ -140,7 +182,13 @@
                         android:background="@color/transparent"
                         app:layout_constraintStart_toEndOf="@+id/episode_fav"
                         app:layout_constraintTop_toTopOf="@+id/bt_fav"
-                        android:src="@drawable/ic_link_black" />
+                        android:src="@drawable/ic_link_black"
+                        android:contentDescription="@string/episode_link_button"
+                        android:nextFocusUp="@id/episode_upload_date"
+                        android:nextFocusRight="@id/episode_link"
+                        android:nextFocusForward="@id/episode_link"
+                        android:nextFocusDown="@id/episode_des_label"
+                        android:nextFocusLeft="@id/episode_fav"/>
 
                     <TextView
                         android:id="@+id/episode_link"
@@ -149,7 +197,11 @@
                         android:layout_marginStart="8dp"
                         app:layout_constraintStart_toEndOf="@+id/bt_link"
                         app:layout_constraintTop_toTopOf="@+id/episode_fav"
-                        android:text="@string/test_link" />
+                        android:text="@string/test_link"
+                        android:nextFocusUp="@id/episode_thumbnail"
+                        android:nextFocusForward="@id/episode_des_label"
+                        android:nextFocusDown="@id/episode_des_label"
+                        android:nextFocusLeft="@id/bt_link"/>
 
                     <ImageView
                         android:id="@+id/episode_thumbnail"
@@ -159,7 +211,11 @@
                         android:layout_marginEnd="8dp"
                         android:scaleType="centerCrop"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/episode_name_image_description"
+                        android:nextFocusDown="@id/bt_link"
+                        android:nextFocusForward="@id/bt_play"
+                        android:nextFocusLeft="@id/episode_duration"/>
 
                 </android.support.constraint.ConstraintLayout>
             </android.support.v7.widget.CardView>
@@ -174,7 +230,10 @@
                 android:textColor="@color/blueGrey_900"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView"
-                tools:text="@string/about_podcast" />
+                tools:text="@string/about_podcast"
+                android:nextFocusUp="@id/episode_link"
+                android:nextFocusDown="@id/episode_description"
+                android:nextFocusForward="@id/episode_description"/>
 
             <TextView
                 android:id="@+id/episode_description"
@@ -188,6 +247,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/episode_des_label"
+                android:nextFocusUp="@id/episode_des_label"
+                android:nextFocusForward="@id/podcast_name"
                 tools:text="@string/test_content" />
 
         </android.support.constraint.ConstraintLayout>
