@@ -198,11 +198,11 @@ public class SearchFragment extends Fragment implements LoaderManager.LoaderCall
                 JSONArray jsonArray = jsonObject.getJSONArray("results");
                 for(int i=0; i< jsonArray.length(); i++){
                     JSONObject podcast = jsonArray.getJSONObject(i);
-                    String id = podcast.getString("id");
-                    String title = podcast.getString("title_original");
-                    String thumbnail = podcast.getString("thumbnail");
-                    String description = android.text.Html.fromHtml(podcast.getString("description_original")).toString();
-                    String publisher = podcast.getString("publisher_original");
+                    String id = podcast.optString("id");
+                    String title = podcast.optString("title_original");
+                    String thumbnail = podcast.optString("thumbnail");
+                    String description = android.text.Html.fromHtml(podcast.optString("description_original")).toString();
+                    String publisher = podcast.optString("publisher_original");
                     podcastList.add(new Podcast(id,title,description,publisher,thumbnail));
                 }
                 podcastListTemp = podcastList;

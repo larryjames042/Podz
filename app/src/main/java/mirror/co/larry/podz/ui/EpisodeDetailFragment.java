@@ -3,6 +3,8 @@ package mirror.co.larry.podz.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+
+import java.util.List;
 
 import mirror.co.larry.podz.R;
 import mirror.co.larry.podz.util.HelperUtil;
@@ -87,7 +91,7 @@ public class EpisodeDetailFragment extends Fragment {
         binding.btPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onPlayButtonClick(audio, thumbnail, title);
+                mListener.onPlayButtonClick(audio, thumbnail, title, podcastName);
             }
         });
         mVisibleListener.showBottomNav(false);
@@ -109,7 +113,13 @@ public class EpisodeDetailFragment extends Fragment {
             public void onClick(View v) {
                 Uri uri = Uri.parse(listenNoteUrl);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+                // Verify it resolves
+                PackageManager packageManager = getActivity().getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+                boolean isIntentSafe = activities.size() > 0;
+                if(isIntentSafe){
+                    startActivity(intent);
+                }
             }
         });
 
@@ -136,6 +146,6 @@ public class EpisodeDetailFragment extends Fragment {
     }
 
     interface OnButtonPlayListener{
-        void onPlayButtonClick(String audioUrl, String thumbnail, String episodeName);
+        void onPlayButtonClick(String audioUrl, String thumbnail, String episodeName, String podcastName);
     }
 }

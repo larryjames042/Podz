@@ -139,40 +139,11 @@
                         app:layout_constraintTop_toTopOf="@+id/episode_duration"
                         android:text="@string/share"
                         android:nextFocusUp="@id/episode_upload_date"
-                        android:nextFocusRight="@id/bt_fav"
-                        android:nextFocusForward="@id/bt_fav"
-                        android:nextFocusDown="@id/episode_des_label"
-                        android:nextFocusLeft="@id/bt_share"/>
-
-                    <ImageButton
-                        android:id="@+id/bt_fav"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:background="@color/transparent"
-                        app:layout_constraintStart_toEndOf="@+id/episode_share"
-                        app:layout_constraintTop_toTopOf="@+id/bt_share"
-                        android:src="@drawable/ic_favorite_black"
-                        android:contentDescription="@string/episode_fav_button"
-                        android:nextFocusUp="@id/episode_upload_date"
-                        android:nextFocusRight="@id/episode_fav"
-                        android:nextFocusForward="@id/episode_fav"
-                        android:nextFocusDown="@id/episode_des_label"
-                        android:nextFocusLeft="@id/episode_share"/>
-
-                    <TextView
-                        android:id="@+id/episode_fav"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        app:layout_constraintStart_toEndOf="@+id/bt_fav"
-                        app:layout_constraintTop_toTopOf="@+id/episode_share"
-                        android:text="@string/favourite"
-                        android:nextFocusUp="@id/episode_upload_date"
                         android:nextFocusRight="@id/bt_link"
                         android:nextFocusForward="@id/bt_link"
                         android:nextFocusDown="@id/episode_des_label"
-                        android:nextFocusLeft="@id/bt_fav"/>
+                        android:nextFocusLeft="@id/bt_share"/>
+
 
                     <ImageButton
                         android:id="@+id/bt_link"
@@ -180,28 +151,28 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:background="@color/transparent"
-                        app:layout_constraintStart_toEndOf="@+id/episode_fav"
-                        app:layout_constraintTop_toTopOf="@+id/bt_fav"
-                        android:src="@drawable/ic_link_black"
                         android:contentDescription="@string/episode_link_button"
-                        android:nextFocusUp="@id/episode_upload_date"
+                        android:nextFocusLeft="@id/episode_share"
                         android:nextFocusRight="@id/episode_link"
-                        android:nextFocusForward="@id/episode_link"
+                        android:nextFocusUp="@id/episode_upload_date"
                         android:nextFocusDown="@id/episode_des_label"
-                        android:nextFocusLeft="@id/episode_fav"/>
+                        android:nextFocusForward="@id/episode_link"
+                        android:src="@drawable/ic_link_black"
+                        app:layout_constraintStart_toEndOf="@+id/episode_share"
+                        app:layout_constraintTop_toTopOf="@+id/episode_share" />
 
                     <TextView
                         android:id="@+id/episode_link"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        app:layout_constraintStart_toEndOf="@+id/bt_link"
-                        app:layout_constraintTop_toTopOf="@+id/episode_fav"
-                        android:text="@string/test_link"
+                        android:nextFocusLeft="@id/bt_link"
                         android:nextFocusUp="@id/episode_thumbnail"
-                        android:nextFocusForward="@id/episode_des_label"
                         android:nextFocusDown="@id/episode_des_label"
-                        android:nextFocusLeft="@id/bt_link"/>
+                        android:nextFocusForward="@id/episode_des_label"
+                        android:text="@string/test_link"
+                        app:layout_constraintStart_toEndOf="@+id/bt_link"
+                        app:layout_constraintTop_toTopOf="@+id/bt_link" />
 
                     <ImageView
                         android:id="@+id/episode_thumbnail"

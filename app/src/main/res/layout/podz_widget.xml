@@ -1,9 +1,11 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_layout"
+    android:gravity="center_vertical"
     android:background="@color/white"
     android:padding="@dimen/widget_margin">
 
@@ -11,39 +13,20 @@
         android:id="@+id/last_played_episode_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:textStyle="bold"
         android:textSize="@dimen/widget_label_text_size"
-        android:text="@string/last_played_episode"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.47000003" />
+        android:textColor="@color/colorPrimaryDark"
+        android:text="@string/last_played_episode" />
 
     <TextView
         android:id="@+id/appwidget_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/last_played_episode_label"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
+        android:layout_marginTop="@dimen/widget_margin"
+        android:textStyle="italic"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/widget_content_text_size"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/last_played_episode_label" />
+        android:textSize="@dimen/widget_content_text_size" />
 
 
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

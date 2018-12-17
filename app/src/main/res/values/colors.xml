@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/blueGrey_800</color>
-    <color name="colorPrimaryDark">@color/blueGrey_900</color>
-    <color name="colorAccent">@color/light_green_a200</color>
+    <color name="colorPrimary">@color/dark_gray_900</color>
+    <color name="colorPrimaryDark">@color/black</color>
+    <color name="colorAccent">@color/green_a200</color>
 
 
     <color name="teal_500">#009688</color>
@@ -15,11 +15,24 @@
     <color name="brown_700">#5D4037</color>
     <color name="brown_900">#3E2723</color>
 
+    <color name="black">#000000</color>
+    <color name="dark_gray_900">#212121</color>
+    <color name="dark_gray_800">#424242</color>
+    <color name="dark_gray_700">#616161</color>
+
     <color name="blueGrey_900">#263238</color>
     <color name="blueGrey_800">#37474F</color>
     <color name="blueGrey_700">#455A64</color>
     <color name="blueGrey_500">#607D8B</color>
     <color name="blueGrey_300">#90A4AE</color>
+
+    <color name="purple_900">#4A148C</color>
+    <color name="purple_800">#6A1B9A</color>
+    <color name="purple_700">#7B1FA2</color>
+    <color name="purple_500">#9C27B0</color>
+    <color name="purple_300">#BA68C8</color>
+
+    <color name="green_a200">#69F0AE</color>
 
     <color name="transparent">#00fcfcfc</color>
     <color name="white">#ffffff</color>

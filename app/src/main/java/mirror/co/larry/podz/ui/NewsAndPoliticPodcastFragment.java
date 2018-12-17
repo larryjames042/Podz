@@ -107,11 +107,11 @@ public class NewsAndPoliticPodcastFragment extends Fragment implements LoaderMan
                 JSONArray jsonArray = jsonObject.getJSONArray("channels");
                 for(int i=0; i< jsonArray.length(); i++){
                     JSONObject podcast = jsonArray.getJSONObject(i);
-                    String id = podcast.getString("id");
-                    String title = podcast.getString("title");
-                    String thumbnail = podcast.getString("thumbnail");
-                    String description = android.text.Html.fromHtml(podcast.getString("description")).toString();
-                    String publisher = podcast.getString("publisher");
+                    String id = podcast.optString("id");
+                    String title = podcast.optString("title");
+                    String thumbnail = podcast.optString("thumbnail");
+                    String description = android.text.Html.fromHtml(podcast.optString("description")).toString();
+                    String publisher = podcast.optString("publisher");
                     podcastList.add(new Podcast(id,title,description,publisher,thumbnail));
                 }
                 podcastAdapter = new PodcastAdapter(getActivity(), podcastList, (PodcastAdapter.OnPodcastClickListener) getActivity());

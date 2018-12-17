@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/exo_control_top_padding"
     android:paddingBottom="@dimen/exo_control_bottom_padding"
-    android:background="@color/colorPrimary"
+    android:background="@color/transparent"
     tools:targetApi="28">
 
     <LinearLayout

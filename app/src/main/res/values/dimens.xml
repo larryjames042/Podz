@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="app_bar_layout_height">250dp</dimen>
+    <dimen name="app_bar_layout_height">320dp</dimen>
     <dimen name="searchview_corner_radius">4dp</dimen>
     <dimen name="podcast_item_elevation">4dp</dimen>
     <dimen name="recyclerview_item_offset">8dp</dimen>
@@ -28,5 +28,7 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="button_min_width">48dp</dimen>
     <dimen name="widget_label_text_size">20sp</dimen>
     <dimen name="widget_content_text_size">18sp</dimen>
+    <dimen name="episode_image_width">240dp</dimen>
+    <dimen name="network_error_image_width">172dp</dimen>
 
 </resources>

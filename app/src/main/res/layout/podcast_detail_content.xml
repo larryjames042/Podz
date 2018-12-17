@@ -9,54 +9,10 @@
 
         <android.support.constraint.ConstraintLayout
             android:focusable="true"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/bt_website"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/bt_share"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="spread"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/bt_share"
-                android:nextFocusForward="@id/bt_share"
-                android:nextFocusRight="@id/bt_share"
-                android:nextFocusDown="@id/label_abt_podcast"
-                android:text="@string/website" />
-
-            <Button
-                android:id="@+id/bt_share"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/bt_favourite"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/bt_website"
-                app:layout_constraintTop_toTopOf="parent"
-                android:nextFocusForward="@id/bt_favourite"
-                android:nextFocusRight="@id/bt_favourite"
-                android:nextFocusLeft="@id/bt_website"
-                android:nextFocusDown="@id/label_abt_podcast"
-                android:text="@string/share" />
-
-            <Button
-                android:id="@+id/bt_favourite"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/bt_share"
-                app:layout_constraintTop_toTopOf="@+id/bt_share"
-                android:text="@string/favourite"
-                android:nextFocusForward="@id/label_abt_podcast"
-                android:nextFocusLeft="@id/bt_share"
-                android:nextFocusDown="@id/label_abt_podcast"/>
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/constraintLayout"
@@ -64,10 +20,55 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:focusable="true"
-                android:background="@color/colorPrimary"
+                android:background="@color/dark_gray_900"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bt_share">
+                app:layout_constraintStart_toStartOf="parent">
+
+                <Button
+                    android:id="@+id/bt_website"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toStartOf="@+id/bt_share"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="spread"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/bt_share"
+                    android:nextFocusForward="@id/bt_share"
+                    android:nextFocusRight="@id/bt_share"
+                    android:nextFocusDown="@id/label_abt_podcast"
+                    android:text="@string/website" />
+
+                <Button
+                    android:id="@+id/bt_share"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toStartOf="@+id/bt_favourite"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/bt_website"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:nextFocusForward="@id/bt_favourite"
+                    android:nextFocusRight="@id/bt_favourite"
+                    android:nextFocusLeft="@id/bt_website"
+                    android:nextFocusDown="@id/label_abt_podcast"
+                    android:text="@string/share" />
+
+                <Button
+                    android:id="@+id/bt_favourite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/bt_share"
+                    app:layout_constraintTop_toTopOf="@+id/bt_share"
+                    android:text="@string/favourite"
+                    android:nextFocusForward="@id/label_abt_podcast"
+                    android:nextFocusLeft="@id/bt_share"
+                    android:nextFocusDown="@id/label_abt_podcast"/>
 
                 <TextView
                     android:id="@+id/label_abt_podcast"
@@ -79,7 +80,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/bt_website"
                     android:nextFocusForward="@id/podcast_description"
                     android:nextFocusUp="@id/bt_favourite"
                     android:nextFocusDown="@id/podcast_description"

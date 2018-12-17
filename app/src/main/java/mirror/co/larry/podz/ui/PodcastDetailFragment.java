@@ -5,7 +5,10 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -71,7 +74,6 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("lifecycle : ", "Detail onCreate");
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setTitle(getActivity().getString(R.string.loading_title));
         if(getArguments().containsKey(PODCAST_ID)){
@@ -87,7 +89,6 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("lifecycle : ", "Detail onCreateView");
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_podcast_detail,container, false);
         viewModel = ViewModelProviders.of(this).get(PodcastViewModel.class);
         View view = binding.getRoot();
@@ -147,6 +148,7 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
         fragment.setArguments(bundle);
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                 .replace(R.id.content_container, fragment, EpisodeDetailFragment.TAG)
                 .addToBackStack(TAG)
                 .commit();
@@ -172,32 +174,35 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
             binding.podcastDetailMainLayout.setVisibility(View.VISIBLE);
             try {
                 JSONObject jsonObject = new JSONObject(result);
-                podcastId = jsonObject.getString("id");
-                podcastTitle = jsonObject.getString("title");
-                thumbnail = jsonObject.getString("thumbnail");
-                country = jsonObject.getString("country");
-                podcastDescription = android.text.Html.fromHtml(jsonObject.getString("description")).toString();
-                website = jsonObject.getString("website");
-                listennoteUrl = jsonObject.getString("listennotes_url");
-                publisher = jsonObject.getString("publisher");
+                podcastId = jsonObject.optString("id");
+                podcastTitle = jsonObject.optString("title");
+                thumbnail = jsonObject.optString("thumbnail");
+                country = jsonObject.optString("country");
+                podcastDescription = android.text.Html.fromHtml(jsonObject.optString("description")).toString();
+                if(jsonObject.has("website")){
+                    website = jsonObject.getString("website");
+                }
+
+                listennoteUrl = jsonObject.optString("listennotes_url");
+                publisher = jsonObject.optString("publisher");
                 // set toolbar title
                 binding.toolbar.setTitle(podcastTitle);
                 JSONArray genres = jsonObject.getJSONArray("genres");
                 JSONArray episodes = jsonObject.getJSONArray("episodes");
                 for(int i=0 ;i<genres.length();i++){
-                    genresList.add(genres.getString(i));
+                    genresList.add(genres.optString(i));
                 }
 
                 for(int i=0; i<episodes.length(); i++){
                     JSONObject episodeObj = episodes.getJSONObject(i);
-                    String audio = episodeObj.getString("audio");
-                    String id = episodeObj.getString("id");
-                    String title = episodeObj.getString("title");
-                    String thumbnail = episodeObj.getString("thumbnail");
-                    String description = android.text.Html.fromHtml(episodeObj.getString("description")).toString();
-                    String listenNoteUrl = episodeObj.getString("listennotes_url");
-                    int audioLength = episodeObj.getInt("audio_length");
-                    long pubDate = episodeObj.getLong("pub_date_ms");
+                    String audio = episodeObj.optString("audio");
+                    String id = episodeObj.optString("id");
+                    String title = episodeObj.optString("title");
+                    String thumbnail = episodeObj.optString("thumbnail");
+                    String description = android.text.Html.fromHtml(episodeObj.optString("description")).toString();
+                    String listenNoteUrl = episodeObj.optString("listennotes_url");
+                    int audioLength = episodeObj.optInt("audio_length");
+                    long pubDate = episodeObj.optLong("pub_date_ms");
 
                     episodeList.add(new Episode(audio,id,title,thumbnail, description,listenNoteUrl,pubDate, audioLength, podcastTitle));
                 }
@@ -242,9 +247,11 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
                         b.putString(EpisodeDetailFragment.KEY_TITLE  , lastestEpisode.getTitle());
                         b.putInt( EpisodeDetailFragment.KEY_AUDIO_LENGTH , lastestEpisode.getAudioLength());
                         b.putString( EpisodeDetailFragment.KEY_PUB_DATE, formattedDate);
+                        b.putString(EpisodeDetailFragment.KEY_PODCAST_NAME, podcastTitle);
                         EpisodeDetailFragment fragment = new EpisodeDetailFragment();
                         fragment.setArguments(b);
                         getActivity().getSupportFragmentManager().beginTransaction()
+                                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                                 .replace(R.id.content_container, fragment)
                                 .addToBackStack(TAG)
                                 .commit();
@@ -259,6 +266,27 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
                 ItemOffsetDecoration decoration = new ItemOffsetDecoration(getActivity(), R.dimen.recyclerview_item_offset);
                 binding.podcastDetailContent.rvPreviousEpisode.addItemDecoration(decoration);
                 binding.podcastDetailContent.rvPreviousEpisode.setAdapter(episodeAdapter);
+
+                // website button
+                binding.podcastDetailContent.btWebsite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(website!=null){
+                            Uri uri = Uri.parse(website);
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            // Verify it resolves
+                            PackageManager packageManager = getActivity().getPackageManager();
+                            List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+                            boolean isIntentSafe = activities.size() > 0;
+                            if(isIntentSafe){
+                                startActivity(intent);
+                            }
+                        }else{
+                            Toast.makeText(getContext(), "Website is not available", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -276,6 +304,5 @@ public class PodcastDetailFragment extends Fragment implements LoaderManager.Loa
         if(mListener == null){
             mListener = (OnVisibleListener)context;
         }
-        Log.d("lifecycle : ", "Detail onAttach");
     }
 }

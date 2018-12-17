@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:background="@color/colorPrimary"
+            tools:context=".ui.PlayerFragment">
+
+            <TextView
+                android:id="@+id/tv_player_podcast_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:nextFocusDown="@id/tv_player_episode_name"
+                android:nextFocusForward="@id/tv_player_episode_name"
+                tools:text="Podcast name" />
+
+            <TextView
+                android:id="@+id/tv_player_episode_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tv_player_podcast_name"
+                app:layout_constraintTop_toBottomOf="@+id/tv_player_podcast_name"
+                android:nextFocusDown="@id/img_player_episode_image"
+                android:nextFocusForward="@id/img_player_episode_image"
+                android:nextFocusUp="@id/tv_player_podcast_name"
+                tools:text="Episode Name" />
+
+            <ImageView
+                android:id="@+id/img_player_episode_image"
+                android:layout_width="@dimen/episode_image_width"
+                android:layout_height="@dimen/episode_image_width"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/episode_name_image_description"
+                app:layout_constraintBottom_toTopOf="@+id/main_player_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_player_episode_name"
+                app:layout_constraintVertical_bias="0.49"
+                android:nextFocusDown="@id/main_player_view"
+                android:nextFocusForward="@id/main_player_view"
+                android:nextFocusUp="@id/tv_player_episode_name"
+                tools:src="@drawable/ic_launcher_background" />
+
+            <com.google.android.exoplayer2.ui.PlayerControlView
+                android:id="@+id/main_player_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:controller_layout_id="@layout/exo_controller_layout"
+                app:layout_constraintBottom_toTopOf="@+id/ad_view"
+                android:nextFocusForward="@id/tv_player_podcast_name"
+                android:nextFocusUp="@id/img_player_episode_image"
+                app:show_timeout="0" />
+
+            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/ad_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ads:adSize="LARGE_BANNER"
+                ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
+                ads:layout_constraintEnd_toEndOf="parent"
+                ads:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
+
+</layout>

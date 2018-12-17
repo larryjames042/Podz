@@ -7,23 +7,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusable="true"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/player_background"
         tools:context=".ui.PlayerFragment">
 
         <TextView
             android:id="@+id/tv_player_podcast_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/widget_label_text_size"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:nextFocusDown="@id/tv_player_episode_name"
+            android:nextFocusForward="@id/tv_player_episode_name"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:nextFocusDown="@id/tv_player_episode_name"
-            android:nextFocusForward="@id/tv_player_episode_name"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_container"
             tools:text="Podcast name" />
 
         <TextView
@@ -44,20 +45,20 @@
 
         <ImageView
             android:id="@+id/img_player_episode_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/episode_image_width"
+            android:layout_height="@dimen/episode_image_width"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:contentDescription="@string/episode_name_image_description"
+            android:nextFocusUp="@id/tv_player_episode_name"
+            android:nextFocusDown="@id/main_player_view"
+            android:nextFocusForward="@id/main_player_view"
             app:layout_constraintBottom_toTopOf="@+id/main_player_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_player_episode_name"
-            app:layout_constraintVertical_bias="0.49"
-            android:nextFocusDown="@id/main_player_view"
-            android:nextFocusForward="@id/main_player_view"
-            android:nextFocusUp="@id/tv_player_episode_name"
+            app:layout_constraintVertical_bias="0.51"
             tools:src="@drawable/ic_launcher_background" />
 
         <com.google.android.exoplayer2.ui.PlayerControlView

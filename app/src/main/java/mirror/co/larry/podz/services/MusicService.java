@@ -38,8 +38,8 @@ public class MusicService extends Service implements Player.EventListener {
     private static final int NOTIFY_ID = 1;
     private SimpleExoPlayer exoPlayer;
     private  final IBinder musicBind = new MusicBinder();
-    private boolean isPlaying = false;
-    public String audioUrl, thumbnail, episodeName;
+    private boolean isPlaying = false, isActivityVisible = true;
+    public String audioUrl, thumbnail, episodeName, podcastName;
 
     @Override
     public void onCreate() {
@@ -57,7 +57,11 @@ public class MusicService extends Service implements Player.EventListener {
                 switch (action)
                 {
                     case ACTION_STOP:
-                        stopForegroundService();
+                        if(isActivityVisible){
+                            pausePlayer();
+                        }else{
+                            stopForegroundService();
+                        }
                         Toast.makeText(this, "Foreground service is stopped.", Toast.LENGTH_LONG).show();
                         break;
                     case ACTION_PLAY:
@@ -65,7 +69,7 @@ public class MusicService extends Service implements Player.EventListener {
                         Toast.makeText(this, "Play", Toast.LENGTH_LONG).show();
                         break;
                     case ACTION_PAUSE:
-                        if(exoPlayer!=null) exoPlayer.setPlayWhenReady(false);
+                        pausePlayer();
                         Toast.makeText(this, "Pause", Toast.LENGTH_LONG).show();
                         break;
                     default:
@@ -84,10 +88,6 @@ public class MusicService extends Service implements Player.EventListener {
 
     @Override
     public boolean onUnbind(Intent intent) {
-//        if (exoPlayer!=null) {
-//            exoPlayer.release();
-//            exoPlayer = null;
-//        }
         return false;
     }
 
@@ -111,7 +111,7 @@ public class MusicService extends Service implements Player.EventListener {
         }
     }
 
-    private  void initializePlayer(String audioUri,String episodeName,String thumbnail){
+    private  void initializePlayer(String audioUri){
         Uri uri  = Uri.parse(audioUri);
         if(exoPlayer == null){
             exoPlayer = ExoPlayerFactory.newSimpleInstance(this);
@@ -127,12 +127,13 @@ public class MusicService extends Service implements Player.EventListener {
         exoPlayer.prepare(videoSource);
     }
 
-    public void playPodcast(String audioUrl, String episodeName, String thumbnail){
+    public void playPodcast(String audioUrl, String episodeName, String thumbnail, String podcastName){
         if(this.audioUrl==null && this.episodeName==null && this.thumbnail==null){
             this.audioUrl = audioUrl;
             this.thumbnail = thumbnail;
             this.episodeName = episodeName;
-            initializePlayer(audioUrl, episodeName, thumbnail );
+            this.podcastName = podcastName;
+            initializePlayer(audioUrl);
             exoPlayer.setPlayWhenReady(true);
             buildNotification(episodeName);
         }else{
@@ -143,7 +144,11 @@ public class MusicService extends Service implements Player.EventListener {
                     exoPlayer.setPlayWhenReady(true);
                 }
             }else{
-                initializePlayer(audioUrl, episodeName, thumbnail );
+                initializePlayer(audioUrl);
+                this.audioUrl = audioUrl;
+                this.thumbnail = thumbnail;
+                this.episodeName = episodeName;
+                this.podcastName = podcastName;
                 exoPlayer.setPlayWhenReady(true);
                 buildNotification(episodeName);
             }
@@ -155,6 +160,14 @@ public class MusicService extends Service implements Player.EventListener {
         // update all widgets
         PodzWidget.updateLastPlayedEpisode(this, appWidgetManager,episodeName, appWidgetIds);
 
+    }
+
+    public void setActivityVisibility(boolean isActivityVisible){
+        if(isActivityVisible){
+            this.isActivityVisible = true;
+        }else{
+            this.isActivityVisible = false;
+        }
     }
 
     public boolean isPlaying(){

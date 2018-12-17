@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,7 @@ import mirror.co.larry.podz.adapter.FavouritePodcastAdapter;
 import mirror.co.larry.podz.adapter.PodcastAdapter;
 import mirror.co.larry.podz.databinding.ActivityMainBinding;
 import mirror.co.larry.podz.services.MusicService;
+import mirror.co.larry.podz.util.NetworkUtil;
 import mirror.co.larry.podz.util.OnVisibleListener;
 
 public class MainActivity extends AppCompatActivity implements
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements
     private ActivityMainBinding binding;
     private MusicService musicService;
     private  boolean musicBound = false;
+    private boolean isPlayerViewVisible= false;
     private Intent playIntent;
     private SimpleExoPlayer exoPlayer;
 
@@ -53,14 +56,6 @@ public class MainActivity extends AppCompatActivity implements
             loadFragment(new DiscoverFragment());
         }
 
-//        else{
-//            int index = getSupportFragmentManager().getBackStackEntryCount();
-//            FragmentManager.BackStackEntry backEntry = getSupportFragmentManager().getBackStackEntryAt(index);
-//            String tag = backEntry.getName();
-//            Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-//            loadFragment(fragment);
-//        }
-
        binding.bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         binding.playerSmallViewContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements
                     PlayerFragment playerFragment = new PlayerFragment();
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.content_container, playerFragment)
+                            .replace(R.id.content_container, playerFragment, PlayerFragment.TAG)
                             .addToBackStack(null)
                             .commit();
                 }
@@ -123,7 +118,10 @@ public class MainActivity extends AppCompatActivity implements
             exoPlayer = binder.getExoplayerInstance();
             binding.playerView.setPlayer(exoPlayer);
             if( exoPlayer.getPlayWhenReady()&& exoPlayer.getPlaybackState()== Player.STATE_READY){
-                binding.playerSmallViewContainer.setVisibility(View.VISIBLE);
+                if(!isPlayerViewVisible){
+                    binding.playerSmallViewContainer.setVisibility(View.VISIBLE);
+                }
+
                 binding.tvEpisodeName.setText(musicService.episodeName);
             }
         }
@@ -147,47 +145,55 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy() {
-//        if(playIntent!=null){
-//            stopService(playIntent);
-//            musicService = null;
-//        }
-        Log.d("MainServiceActivity: ", "Destroy");
+        musicService.setActivityVisibility(false);
         super.onDestroy();
     }
 
     @Override
-    public void onPlayButtonClick(String audioUrl, String thumbnail, String episodeName) {
+    public void onPlayButtonClick(String audioUrl, String thumbnail, String episodeName, String podcastName) {
         binding.playerSmallViewContainer.setVisibility(View.VISIBLE);
         binding.tvEpisodeName.setText(episodeName);
         binding.tvEpisodeName.setSelected(true);
-        musicService.playPodcast(audioUrl, episodeName, thumbnail);
+        musicService.playPodcast(audioUrl, episodeName, thumbnail, podcastName);
     }
 
     @Override
     public void podcastItemClickListener(View view, String id) {
-        Bundle bundle = new Bundle();
-        bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
-        Fragment podcastDetailFragment = new PodcastDetailFragment();
-        podcastDetailFragment.setArguments(bundle);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
-                .addToBackStack(null)
-                .commit();
+        if(NetworkUtil.isOnline(this)){
+            Bundle bundle = new Bundle();
+            bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
+            Fragment podcastDetailFragment = new PodcastDetailFragment();
+            podcastDetailFragment.setArguments(bundle);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                    .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
+                    .addToBackStack(null)
+                    .commit();
+        }else{
+            Snackbar.make(binding.getRoot(), getString(R.string.check_network_msg), Snackbar.LENGTH_LONG).show();
+        }
+
     }
 
     @Override
     public void favPodcastItemClickListener(View view, String id) {
-        binding.bottomNavigation.setVisibility(View.GONE);
-        Bundle bundle = new Bundle();
-        bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
-        Fragment podcastDetailFragment = new PodcastDetailFragment();
-        podcastDetailFragment.setArguments(bundle);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
-                .addToBackStack(null)
-                .commit();
+        if(NetworkUtil.isOnline(this)){
+            binding.bottomNavigation.setVisibility(View.GONE);
+            Bundle bundle = new Bundle();
+            bundle.putString(PodcastDetailFragment.PODCAST_ID, id);
+            Fragment podcastDetailFragment = new PodcastDetailFragment();
+            podcastDetailFragment.setArguments(bundle);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                    .replace(R.id.content_container, podcastDetailFragment, PodcastDetailFragment.TAG)
+                    .addToBackStack(null)
+                    .commit();
+        }else {
+            Snackbar.make(binding.getRoot(), getString(R.string.check_network_msg), Snackbar.LENGTH_LONG).show();
+        }
+
     }
 
     @Override
@@ -202,8 +208,28 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onVisible(boolean isVisible) {
-        if(isVisible==false){
-            binding.playerSmallViewContainer.setVisibility(View.VISIBLE);
+        if(isVisible){
+            isPlayerViewVisible = true;
+            binding.playerSmallViewContainer.setVisibility(View.GONE);
+        }else{
+            isPlayerViewVisible = false;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+        } else {
+
+            Fragment f = getSupportFragmentManager().findFragmentByTag(PlayerFragment.TAG);
+            if(f!=null && f.isVisible()){
+                binding.playerSmallViewContainer.setVisibility(View.VISIBLE);
+            }
+            getSupportFragmentManager().popBackStack();
+        }
+
     }
 }

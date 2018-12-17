@@ -8,12 +8,17 @@ import android.content.ServiceConnection;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -29,6 +34,7 @@ import mirror.co.larry.podz.util.UiUtil;
  * A simple {@link Fragment} subclass.
  */
 public class PlayerFragment extends Fragment {
+    public static final String TAG = PlayerFragment.class.getSimpleName();
     FragmentPlayerBinding binding;
     private Intent playIntent;
     private MusicService musicService;
@@ -42,13 +48,22 @@ public class PlayerFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_player, container, false);
+
         View view = binding.getRoot();
+
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
         binding.adView.loadAd(adRequest);
+        // this fragment is visible.. tell mainactivity to hide bottom player view
+        mListener.onVisible(true);
         return view;
     }
 
@@ -64,6 +79,7 @@ public class PlayerFragment extends Fragment {
             player = binder.getExoplayerInstance();
             binding.mainPlayerView.setPlayer(player);
             binding.tvPlayerEpisodeName.setText(musicService.episodeName);
+            binding.tvPlayerPodcastName.setText(musicService.podcastName);
 
             Glide.with(getActivity())
                     .asBitmap()
@@ -96,21 +112,12 @@ public class PlayerFragment extends Fragment {
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(!isVisibleToUser){
-            mListener.onVisible(false);
-        }
-        Log.d("playerview", "sssss");
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
+        mListener.onVisible(false);
     }
 
     public interface OnPlayerViewVisibleListener{
         void onVisible(boolean isVisible);
     }
-
 }
