@@ -1,13 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_layout"
     android:gravity="center_vertical"
-    android:background="@color/white"
-    android:padding="@dimen/widget_margin">
+    android:background="@drawable/widget_background">
 
     <TextView
         android:id="@+id/last_played_episode_label"
@@ -15,6 +14,8 @@
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textSize="@dimen/widget_label_text_size"
+        android:paddingStart="@dimen/widget_margin"
+        android:paddingEnd="@dimen/widget_margin"
         android:textColor="@color/colorPrimaryDark"
         android:text="@string/last_played_episode" />
 
@@ -23,6 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/widget_margin"
+        android:paddingStart="@dimen/widget_margin"
+        android:paddingEnd="@dimen/widget_margin"
         android:textStyle="italic"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/widget_content_text_size" />
